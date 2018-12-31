@@ -1,17 +1,12 @@
-# SitePipe Starter Template
+# Marc Coquand's Personal Website
 
-This is a minimal starting point, for a more complex example see the [Blog
-Example](https://github.com/ChrisPenner/SitePipe/tree/master/examples/blog)
+My personal website, developed using CSS, HTML, Tachyons, Haskell and SitePipe.
+To build it you will need [Stack](https://www.google.com/search?client=firefox-b-ab&q=haskell+stack)
+and you can serve it locally using [Serve](https://www.npmjs.com/package/serve).
+To build simply run:
 
-You can build this site using stack: `stack build && stack exec build-site`
+```
+stack build 
+stack exec build-site
+```
 
-Here's a few steps you could take:
-
-- Try editing templates inside the `site` directory
-- Try serving the built site using something like [Serve](https://www.npmjs.com/package/serve)
-    - `npm install -g serve`
-    - `serve dist/`
-- Read the docs on the [Github Page](https://github.com/chrispenner/sitepipe)
-- Try adding a few more posts!
-- Add some CSS or JS to your site!
-- Try hosting your built site on [Github Pages](https://pages.github.com/)!

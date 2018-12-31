@@ -6,17 +6,31 @@ p {
     margin-bottom: 1.8rem;
     line-height: 1.7;
 }
+.skobeloff {
+    color: #07777C
+}
+.first-capitalize p:first-child:first-letter{
+  float: left;
+  color: #07777c;
+  font-size: 3.0rem;
+  padding-top: 0.8rem;
+  padding-right: 0.3rem;
+}
 code:before{
     content: "λ. \a";
+    color: #07777c;
     white-space: pre-wrap;
     font-weight: 700;
+}
+ul{ 
+    list-style-type: none;
 }
 code {
     font-family: 'Fira Mono', monospace;
     white-space: pre-wrap;
     padding: 1rem;
     color: #111111;
-    background-color: #F4F4F4;
+    background-color: #f7f9f9;
     width: 100%;
     display: block;
 }

@@ -1,0 +1,27 @@
+body {
+    font-family: 'Noto Serif SC', serif;
+}
+p {
+    margin-top: 1.8rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.7;
+}
+code:before{
+    content: "λ. \a";
+    white-space: pre-wrap;
+    font-weight: 700;
+}
+code {
+    font-family: 'Fira Mono', monospace;
+    white-space: pre-wrap;
+    padding: 1rem;
+    color: #111111;
+    background-color: #F4F4F4;
+    width: 100%;
+    display: block;
+}
+
+hr {
+    color: #F4F4F4;
+    width: 60%;
+}

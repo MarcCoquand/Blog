@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>{{title}}</title>
+        <link rel="stylesheet"
+            href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:400,500" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700" rel="stylesheet">
+        <link rel="stylesheet" href="/css/style.css">
+ 
+    </head>
+    <body>
+        <header class="pb2 mh3 mw7 mh7-ns mh5-m dark-gray">
+            <h3 class="fw4">
+                <a href="/" class="link black hover-moon-gray fw5">
+                    Personal Blog
+                </a> | Marc Coquand
+            </h3>
+        </header>
+        <article class="db mw7 mh3 mh7-ns mh5-m dark-gray pb5">
+            <h1 class="lh-title f2 f-subheadline-ns fw4">{{title}}</h1>
+            <h4 class="fw4 i">{{date}}</h4>
+            <div class="lh-copy f5 fw4 mw6">
+                {{{content}}}
+            </div>
+            <p class="f5 fw4">
+            Signing off,<br>
+            {{author}}
+            <p class="fw4 i gray mb2">
+                The source code for this blog can be found on <a class="link dark-gray hover-moon-gray
+                fw5" href="https://github.com/MarcCoquand/blog">Github</a>.
+            </p>
+            <a href="/" class="link black hover-moon-gray 
+                fw5">‹ View more posts</a>
+            </p>
+        </article>
+    </body>
+</html>

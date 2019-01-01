@@ -12,9 +12,12 @@ p {
 .first-capitalize p:first-child:first-letter{
   float: left;
   color: #07777c;
-  font-size: 3.0rem;
-  padding-top: 0.8rem;
+  font-size: 3.4rem;
+  padding-top: 0.5rem;
   padding-right: 0.3rem;
+}
+h2::before{
+    content: "› "; |
 }
 code:before{
     content: "λ. \a";

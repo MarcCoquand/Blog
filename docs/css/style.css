@@ -2,6 +2,14 @@ body {
   font-family: "Scheherazade", serif;
 }
 
+.sarabun {
+  font-family: "Sarabun", serif;
+}
+
+.upcase {
+    text-transform: uppercase;
+}
+
 .article p {
   line-height: 1.15;
 }
@@ -13,7 +21,7 @@ body {
 .first-capitalize p:first-child:first-letter {
   float: left;
   color: #07777c;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   padding-top: 0.6rem;
   padding-right: 0.3rem;
   box-sizing: border-box;
@@ -76,3 +84,14 @@ ul {
   color: #f4f4f4;
   width: 60%;
 }
+
+.stylish-box {
+}
+
+.hypertext-clone,
+.hypertext {
+}
+
+.ht-row {
+}
+

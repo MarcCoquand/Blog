@@ -2,10 +2,13 @@ body {
   font-family: "Scheherazade", serif;
 }
 
+.upcase {
+    text-transform: uppercase;
+}
+
 .font-oswald {
   font-family: "Oswald", sans-serif;
-  text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
 }
 
 .article p {
@@ -19,7 +22,7 @@ body {
 .first-capitalize p:first-child:first-letter {
   float: left;
   color: #07777c;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   padding-top: 0.6rem;
   padding-right: 0.3rem;
   box-sizing: border-box;

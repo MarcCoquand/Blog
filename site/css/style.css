@@ -2,16 +2,12 @@ body {
   font-family: "Scheherazade", serif;
 }
 
-.oswald {
-  font-family: "Oswald", serif;
+.sarabun {
+  font-family: "Sarabun", serif;
 }
 
 .upcase {
     text-transform: uppercase;
-}
-
-.font-oswald {
-  font-family: "Oswald", sans-serif;
 }
 
 .article p {

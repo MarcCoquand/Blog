@@ -2,12 +2,6 @@ body {
   font-family: "Scheherazade", serif;
 }
 
-.font-oswald {
-  font-family: "Oswald", sans-serif;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
 .article p {
   line-height: 1.15;
 }

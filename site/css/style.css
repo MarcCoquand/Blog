@@ -2,13 +2,16 @@ body {
   font-family: "Scheherazade", serif;
 }
 
+.oswald {
+  font-family: "Oswald", serif;
+}
+
 .upcase {
     text-transform: uppercase;
 }
 
 .font-oswald {
   font-family: "Oswald", sans-serif;
-  font-size: 1.0rem;
 }
 
 .article p {
@@ -85,3 +88,14 @@ ul {
   color: #f4f4f4;
   width: 60%;
 }
+
+.stylish-box {
+}
+
+.hypertext-clone,
+.hypertext {
+}
+
+.ht-row {
+}
+

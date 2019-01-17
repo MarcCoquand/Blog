@@ -145,7 +145,7 @@ const hypertext = (function() {
         while (i--) {
             let div = document.createElement('div');
             div.classList.add('ht-row');
-            div.innerHTML = '» ';
+            div.innerHTML = '&#x200B';
             clone.insertAdjacentElement('beforeend', div);
         }
 

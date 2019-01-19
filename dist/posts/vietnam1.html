@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Vietnam Ramblings, Week One</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css?family=Scheherazade:400,700"
+      rel="stylesheet"
+    />
+
+    <link href="https://fonts.googleapis.com/css?family=Sarabun" rel="stylesheet">
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7 pb5 mh5-ns dark-gray">
+      <h3 class="fw5 f5 sarabun upcase ttu tracked">
+        <a href="/" class="link black hover-moon-gray ">Marc Coquand</a> »
+        Article
+      </h3>
+    </header>
+    <article class="article db mw7 mh3 mh5-ns dark-gray pb5">
+      <h1 class="f1 fw7 lh-title ">Vietnam Ramblings, Week One</h1>
+      <p class="fw4 f3 i pt4 pb0">2019-01-19</p>
+      <div class="lh-copy first-capitalize f3 pb3 fw5 mw6"><p>Arriving in Vietnam is a breath of hot, dirty air. Mixed with the beautiful fauna is a smog so dense it fills up your lungs and makes you wonder how many years you give up by being here. After being asked twice if I want to hook up by strangers, not hookers, I begin to wonder what odd place I've ended up in. It is the first country I have been to where the people seem to love foreigners, which is refreshing and makes me happy.</p>
+<p>One thing I love about the city is the entrepreneurial spirit of the people here. Everyone seems to be doing freelance gigs, run a store or something else. Maybe it is the recovery from the wars, making this generation responsible for reviving the city and bringing vietnamese economy back. Maybe it is something exclusive for Ho Chi Minh City. I do not know.</p>
+<p>As far as development goes. I finally have the blog up and running. I made a sweet animation for the home page and also finalized the styling to achieve a nice mixture of modern and classical while keeping it very minimal.</p>
+<p>I noticed that Github Pages is a nightmare to work with. For some reason if you want a personal webpage, I.E. a webpage like marccoquand.github.io, you have to publish it on the <code>master</code> branch starting from the root directory. If you publish repository specific web pages you get the options to publish it on a specific branch named <code>gh-pages</code> or the <code>/docs</code> folder. I am using a Haskell library called sitepipe to generate this Blog, and it only provides the option to generate a folder named dist with the website in it. So I figured that my best bet would be to have a <code>dev</code> branch and then use submodules to push the website content to the master branch. Sadly Sitepipe flushes the entire directory before generating the website which means it also clears the submodule metadata. So after running out of options I just decided to switch to netlify where I could select which directory on which branch I wanted to use as my website. So much better... Truly I do not understand why Github makes it so complicated.</p></div>
+      <p class="fw4 f3 i gray mb2">
+        The source code for this blog can be found on
+        <a
+          class="link skobeloff hover-moon-gray fw4"
+          href="https://github.com/MarcCoquand/marccoquand.github.io"
+          >Github</a
+        >.
+      </p>
+      <a href="/" class="f3 link skobeloff hover-moon-gray fw4"
+        >‹ View more posts</a
+      >
+    </article>
+  </body>
+</html>

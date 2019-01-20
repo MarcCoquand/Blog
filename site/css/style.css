@@ -22,8 +22,11 @@ body {
   float: left;
   color: #07777c;
   font-size: 4.5rem;
-  padding-top: 0.6rem;
-  padding-right: 0.3rem;
+  padding-top: 0.7rem; 
+  margin-top: -0.1rem; 
+  margin-right: 0.3rem; 
+  margin-bottom: -0.2rem; 
+  line-height: 3rem; 
   box-sizing: border-box;
 }
 .article h2 {

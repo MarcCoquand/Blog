@@ -172,37 +172,42 @@ It has given us an error, saying data did not load but still has data to show!
 This means that we have an invalid state! This should be impossible!
 
 Let us look at another solution. What if we start off with the following
-union type:
+discriminated union type:
 
 ```
 type State = Loading | Loaded | Error
 ```
 
 Now we three possible states and the cardinality will be of the form
-`cardinality(State) = cardinality(Loading) + cardinality(Loaded) + cardinality(Error)`. Let us implement the interfaces as well as discriminated
-union types.
+
+```
+cardinality(State) =
+cardinality(Loading) + cardinality(Loaded) + cardinality(Error)
+```
+
+Let us implement the interfaces for State.
 
 ```
 
 interface Loading {
-kind: "loading";
+    kind: "loading";
 }
 
 interface Loaded {
-kind: "loaded";
-data: Data
+    kind: "loaded";
+    data: Data
 }
 
 interface Error {
-kind: "error";
-message: string
+    kind: "error";
+    message: string
 }
 
 ```
 
-The field "kind" has a cardinality of 1 since it's just a given value. For
-Typescript to enforce this we must enable strict null checks. So we can
-calculate the cardinality of State and find it's total cardinality is
+The field "kind" has a cardinality of 1 since it's simply a given value. Enable
+Strict null checks in Typescript to enforce this. Now we can calculate the
+cardinality of State and find it's total cardinality is
 
 ```
 cardinality(Loading) = 1

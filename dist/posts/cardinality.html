@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Bug Eraser Data Structures in Typescript</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Scheherazade:400,700"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Sarabun"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7 pb5 mh5-ns dark-gray">
+      <h3 class="fw5  f5 sarabun upcase ttu tracked">
+        <a href="/" class="link black hover-moon-gray ">Marc Coquand</a> »
+        Article
+      </h3>
+    </header>
+    <article class="article db mw7 mh3 mh5-ns dark-gray pb5">
+      <h1 class="f1 fw7 lh-title ">Bug Eraser Data Structures in Typescript</h1>
+      <p class="fw4 f3 i pt4 pb0">2019-02-03</p>
+      <div class="lh-copy dashed-list first-capitalize f3 pb3 fw5 mw6">
+        <p>The choices of data structures can have a big impact on our software. For example, should we represent our list of users as a hash map, array or stack? There are multiple aspects to take into account when choosing, such as performance. Choosing the wrong one makes it easier to introduce <em>bugs</em> into our software. This is what I will be demonstrating today, along with a tool how you can check manually if you have the right data structure.</p>
+<p>Say we want to create a program. The specification says this program will use three colors: blue, red and green. As we are good developers, we start of writing the types. We create an interface to represent our data type as follows:</p>
+<pre><code>interface NaiveColor {
+    isBlue: boolean;
+    isRed: boolean;
+    isGreen: boolean;
+}</code></pre>
+<p>Now, we can represent blue color as follows.</p>
+<pre><code>const blue: NaiveColor = {
+    isBlue: true,
+    isRed: false,
+    isGreen: false
+}</code></pre>
+<p>All good and well but what about this value?</p>
+<pre><code>const imImpossible: NaiveColor = {
+    isBlue: true,
+    isRed: true,
+    isGreen: false
+}</code></pre>
+<p>Our program specified three different colors; red, green and blue. <code>imImpossible</code> seems to be both blue and red at the same time. Should we represent it as purple? No, that was not in the specification. Our choice of representation for color has made it possible for <em>invalid data</em> to exist. Our developers would have to be extra disciplined to ensure that <code>NaiveColor</code> does not introduce unintended bugs in the system.</p>
+<p>Now, how else might we have done it? By using Enums. Check out the following representation:</p>
+<pre><code>type Color = Blue | Green | Red</code></pre>
+<p>Now, representing a color that is both red and blue at the same time is impossible. By choosing a different data structure, we have made it impossible to create <em>invalid data</em>. The reason, why invalid data is impossible is because the enum's <em>cardinality</em> matches the amount of valid values of the colors we are trying to represent. What is cardinality? Cardinality of a type is a measure of the amount of values of a type are possible. Color has three possible values: Blue, Green and Red. We say that <code>cardinality(Color)=3</code>.</p>
+<p>Now what about <code>NaiveColor</code>, what cardinality does it have? Let us first look at the following type</p>
+<pre><code>type NaiveColorPrim = [boolean, boolean, boolean]</code></pre>
+<p>A boolean can have two possible values: true and false, thus <code>cardinality(boolean) == 2</code>. To calculate <code>NaiveColorPrim</code>'s cardinality, we multiply the cardinality of each of it's members together. I.E.</p>
+<pre><code>cardinality(NaiveColorPrim) =
+cardinality(boolean) ×
+cardinality(boolean) ×
+cardinality(boolean) =
+2×2×2=8</code></pre>
+<p>Same goes for the interface <code>NaiveColor</code>. These types, or interfaces, are usually called <em>product type</em>, since it's cardinality is the product of all the cardinalities of each of it's members. In Typescript, there is a separation between types and interfaces. In this article we consider them all to be types, since an interface can be represented as a tuple of all it's members.</p>
+<p>Since we knew that the amount of valid representations of colors were 3 and that cardinality of <code>NaiveColor</code> is 8, we can deduce that <code>NaiveColor</code> allows for <em>invalid data</em>. Invalid data can be a source of errors and bugs, thus we want to eliminate them by using types to protect us.</p>
+<p>Another concept we introduce is sum types. For example, let's look at the type <code>MaybeBool</code>.</p>
+<pre><code>type MaybeBool = boolean | Void;</code></pre>
+<p><code>MaybeBool</code> can either be true, false or Void. Thus</p>
+<pre><code>cardinality(MaybeBool) =
+cardinality(boolean) + cardinality(Void) =
+2+1=3</code></pre>
+<p>Some other types that often come up are strings and numbers, whose cardinalities we both represent as ∞ (although number is closer to 2^54, still we distinguish that this is a big number). It is important to remember that cardinality(1+∞)≠ ∞. Different sizes of infinity matters!</p>
+<h2 id="a-more-difficult-problem">A more difficult problem</h2>
+<p>We want to create a simple application that loads some data and displays it. The application starts of by loading in information from a source and then displays it to the user. If it fails it displays an error. How should we structure this applications state?</p>
+<p>We do not have a lot of information but there are already a few things we know will be needed in the data model.</p>
+<ul>
+<li>We have a state where data is being loaded.</li>
+<li>If downloaded successfully, we load the main state with the data.</li>
+<li>If it fails, we need to display an error.</li>
+</ul>
+<p>So already we can start to reason about the cardinality of our applications state. It has three different states: loading, failure and loaded. We do not know about the cardinality of the data but we can try to represent errors as a string. We also note that the amount of possible errors and the amount of possible datas are not dependant on eachother, or the fact that it is loading. Thus we can guess that the cardinality should have some form similar to 1+∞+∞. This means that we can dismiss the following solution:</p>
+<pre><code>interface NaiveState {
+    error: string | undefined ;
+    isLoading: boolean;
+    data: Data | undefined;
+}</code></pre>
+<p>Why? The cardinality of NaiveState is</p>
+<pre><code>cardinality(errors) = ∞ + 1
+cardinality(isLoading) = 2
+cardinality(data) = ∞ + 1
+
+cardinality(NaiveState) =
+cardinality(errors) × cardinality(isLoading) × cardinality(data) =
+(∞+1)×2×(∞+1)</code></pre>
+<p>Which is not what we are looking for and we can also find the following value</p>
+<pre><code>const state : NaiveState = {
+    error = &quot;data did not load&quot;,
+    isLoading: false,
+    data = {...}
+}</code></pre>
+<p>It has given us an error, saying data did not load but still has data to show! This means that we have an invalid state! This should be impossible!</p>
+<p>Let us look at another solution. What if we start off with the following union type:</p>
+<pre><code>type State = Loading | Loaded | Error</code></pre>
+<p>Now we three possible states and the cardinality will be of the form <code>cardinality(State) = cardinality(Loading) + cardinality(Loaded) + cardinality(Error)</code>. Let us implement the interfaces as well as discriminated union types.</p>
+<pre><code>
+interface Loading {
+kind: &quot;loading&quot;;
+}
+
+interface Loaded {
+kind: &quot;loaded&quot;;
+data: Data
+}
+
+interface Error {
+kind: &quot;error&quot;;
+message: string
+}
+</code></pre>
+<p>The field &quot;kind&quot; has a cardinality of 1 since it's just a given value. For Typescript to enforce this we must enable strict null checks. So we can calculate the cardinality of State and find it's total cardinality is</p>
+<pre><code>cardinality(Loading) = 1
+cardinality(Loaded) = 1×cardinality(Data) = ∞
+cardinality(Error) = 1×cardinality(Error) = ∞
+cardinality(State) = 1+∞+∞</code></pre>
+<p>Much better, by taking a closer look at the problem we were solving and using cardinality we could conclude that we probably had the wrong implementation for cardinality and found an alternative solution that is much more elegant and makes impossible states impossible.</p>
+      </div>
+      <a href="/" class="f3 link skobeloff hover-moon-gray fw4"
+        >‹ View more posts</a
+      >
+    </article>
+  </body>
+</html>

@@ -46,24 +46,23 @@ const imImpossible: NaiveColor = {
 Our program specified three different colors; red, green and blue.
 `imImpossible` seems to be both blue and red at the same time. Should we
 represent it as purple? No, that was not in the specification. Our choice of
-representation for color has made it possible for _invalid data_ to exist. Our
-developers would have to be extra disciplined to ensure that `NaiveColor` does
-not introduce unintended bugs in the system.
+representation for color has made it possible for _invalid data_ to exist.
+This is a potential source of bugs.
 
-Now, how else might we have done it? By using Enums. Check out the following
-representation:
+Now, how else might we have represented colors? By using Union types. Check out
+the following type
 
 ```
-type Color = Blue | Green | Red
+type GoodColor = Blue | Green | Red
 ```
 
-Now, representing a color that is both red and blue at the same time is
-impossible. By choosing a different data structure, we have made it impossible
-to create _invalid data_. The reason, why invalid data is impossible is because
-the enum's _cardinality_ matches the amount of valid values of the colors we are
-trying to represent. What is cardinality? Cardinality of a type is a measure of
-the amount of values of a type are possible. Color has three possible values:
-Blue, Green and Red. We say that `cardinality(Color)=3`.
+With this type, representing a color that is both red and blue at the same time
+is impossible. By choosing a different data structure, we have made it
+impossible to create _invalid data_. Why invalid data is impossible is because
+GoodColor's _cardinality_ matches the amount of valid values of the colors we
+are trying to represent. What is cardinality? Cardinality of a type is a measure
+of the amount of values of a type are possible. Color has three possible values:
+Blue, Green and Red. We therefore say that `cardinality(Color)=3`.
 
 Now what about `NaiveColor`, what cardinality does it have? Let us first look at
 the following type
@@ -90,13 +89,13 @@ cardinalities of each of it's members. In Typescript, there is a separation
 between types and interfaces. In this article we consider them all to be
 types, since an interface can be represented as a tuple of all it's members.
 
-Since we knew that the amount of valid representations of colors were 3 and that
+Since we know that the amount of valid representations of colors were 3 and that
 cardinality of `NaiveColor` is 8, we can deduce that `NaiveColor` allows for
 _invalid data_. Invalid data can be a source of errors and bugs, thus we want to
-eliminate them by using types to protect us.
+eliminate them by using types.
 
-Another concept we introduce is sum types. For example, let's look at the
-type `MaybeBool`.
+There are product types, described above and there are also sum types, such as
+`GoodColor`. Another example is the type `MaybeBool`.
 
 ```
 type MaybeBool = boolean | Void;
@@ -110,20 +109,23 @@ cardinality(boolean) + cardinality(Void) =
 2+1=3
 ```
 
-Some other types that often come up are strings and numbers, whose cardinalities
-we both represent as ∞ (although number is closer to 2^54, still we
-distinguish that this is a big number). It is important to remember that
-cardinality(1+∞)≠ ∞. Different sizes of infinity matters!
+So sum types are called sum types because they're the sum of the cardinalities
+of all their members. Product types are called product types because they are
+the product of all their members, intuitive right?
 
-## A more difficult problem
+Some other primitive types that often come up are strings and numbers, whose
+cardinalities we both represent as ∞, to indicate that their cardinality is
+large. Remember that cardinality(1+∞)≠∞. Different sizes of infinity matters!
 
-We want to create a simple application that loads some data and displays it. The
-application starts of by loading in information from a source and then displays
-it to the user. If it fails it displays an error. How should we structure this
-applications state?
+## Cardinality in practice, a more difficult problem
 
-We do not have a lot of information but there are already a few things we know
-will be needed in the data model.
+Say we want to create a simple application that loads some data and displays it.
+The application starts of by loading in information from a source and then
+displays it to the user. If it fails it displays an error. How should we
+structure this applications state?
+
+We do not have a lot of information but there are already things we know are
+needed in the data model.
 
 - We have a state where data is being loaded.
 - If downloaded successfully, we load the main state with the data.
@@ -131,45 +133,58 @@ will be needed in the data model.
 
 So already we can start to reason about the cardinality of our applications
 state. It has three different states: loading, failure and loaded. We do not
-know about the cardinality of the data but we can try to represent errors as a
-string. We also note that the amount of possible errors and the amount of
-possible datas are not dependant on eachother, or the fact that it is loading.
-Thus we can guess that the cardinality should have some form similar to 1+∞+∞.
-This means that we can dismiss the following solution:
+know about the cardinality of the data, so let us assume it is ∞. We can
+represent errors as a string, thus the cardinality of errors should also be ∞.
+We also note that the amount of possible errors and the amount of possible data
+are not dependant on each other. We also have a state loading, which since it
+only has one value, is 1. Thus we can guess that the cardinality should have a
+form of 1+∞+∞. This means that that the following solution is not ideal.
 
 ```
 interface NaiveState {
-    error: string | undefined ;
+    loadingError: string | undefined ;
     isLoading: boolean;
     data: Data | undefined;
 }
 ```
 
-Why? The cardinality of NaiveState is
+Why? The cardinality of `NaiveState` is
 
 ```
-cardinality(errors) = ∞ + 1
+cardinality(loadingError) = ∞ + 1
 cardinality(isLoading) = 2
 cardinality(data) = ∞ + 1
 
 cardinality(NaiveState) =
-cardinality(errors) × cardinality(isLoading) × cardinality(data) =
+cardinality(loadingError) × cardinality(isLoading) × cardinality(data) =
 (∞+1)×2×(∞+1)
 ```
 
-Which is not what we are looking for and we can also find the
-following value
+It is a product type, not a sum type. Also the cardinality of each factor seems
+to be higher than desired. It is easy to conjure up a state that actually should
+be impossible to happen! Look at the following example.
 
 ```
 const state : NaiveState = {
-    error = "data did not load",
+    loadingError = "data did not load",
     isLoading: false,
     data = {...}
 }
+
+function displayState(state : NaiveState) {
+    if (state.isLoading) {
+        displayLoading()
+    } else if (state.loadingError) {
+        console.log(state.error)
+    } else if(data) {
+        displayData()
+    }
+}
 ```
 
-It has given us an error, saying data did not load but still has data to show!
-This means that we have an invalid state! This should be impossible!
+It has given us an error, saying data did not load. However it has also loaded
+some data. This means that we have an invalid state. Somewhere in our code there
+is a bug!
 
 Let us look at another solution. What if we start off with the following
 discriminated union type:
@@ -207,7 +222,7 @@ interface Error {
 
 The field "kind" has a cardinality of 1 since it's simply a given value. Enable
 Strict null checks in Typescript to enforce this. Now we can calculate the
-cardinality of State and find it's total cardinality is
+cardinality of State.
 
 ```
 cardinality(Loading) = 1
@@ -217,6 +232,6 @@ cardinality(State) = 1+∞+∞
 ```
 
 Much better, by taking a closer look at the problem we were solving and using
-cardinality we could conclude that we probably had the wrong implementation for
-cardinality and found an alternative solution that is much more elegant and
-makes impossible states impossible.
+cardinality we could conclude that we probably had the wrong representation for
+our state and found an alternative solution that is much more elegant. Now the
+bug that arose in the previous implementation can not happen anymore!

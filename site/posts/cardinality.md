@@ -7,13 +7,13 @@ date: 2019-02-03
 The choices of data structures can have a big impact on our software. For
 example, should we represent our list of users as a hash map, array or stack?
 There are multiple aspects to take into account when choosing, such as
-performance. Choosing the wrong one makes it easier to introduce _bugs_ into our
+performance. Choosing the wrong one makes it easier to introduce bugs into our
 software. This is what I will be demonstrating today, along with a tool how you
 can check manually if you have the right data structure.
 
 Say we want to create a program. The specification says this program will use
 three colors: blue, red and green. As we are good developers, we start of
-writing the types. We create an interface to represent our data type as follows:
+writing the types. We create an interface to represent our data type.
 
 ```
 interface NaiveColor {
@@ -23,7 +23,7 @@ interface NaiveColor {
 }
 ```
 
-Now, we can represent blue color as follows.
+Now, we can represent a color as follows.
 
 ```
 const blue: NaiveColor = {
@@ -43,14 +43,11 @@ const imImpossible: NaiveColor = {
 }
 ```
 
-Our program specified three different colors; red, green and blue.
-`imImpossible` seems to be both blue and red at the same time. Should we
-represent it as purple? No, that was not in the specification. Our choice of
-representation for color has made it possible for _invalid data_ to exist.
-This is a potential source of bugs.
-
-Now, how else might we have represented colors? By using Union types. Check out
-the following type
+Our specification specified three different colors: red, green and blue.
+`imImpossible` seems to be both blue and red at the same time. Our choice of
+representation for color has made it possible for _invalid data_ to exist. This
+is a potential source of bugs. How else might we have represented colors? By
+using Union types.
 
 ```
 type GoodColor = Blue | Green | Red
@@ -73,7 +70,7 @@ type NaiveColorPrim = [boolean, boolean, boolean]
 
 A boolean can have two possible values: true and false, thus
 `cardinality(boolean) == 2`. To calculate `NaiveColorPrim`'s cardinality,
-we multiply the cardinality of each of it's members together. I.E.
+we multiply the cardinality of each of it's members. I.E.
 
 ```
 cardinality(NaiveColorPrim) =
@@ -85,23 +82,24 @@ cardinality(boolean) =
 
 Same goes for the interface `NaiveColor`. These types, or interfaces, are
 usually called _product type_, since it's cardinality is the product of all the
-cardinalities of each of it's members. In Typescript, there is a separation
-between types and interfaces. In this article we consider them all to be
-types, since an interface can be represented as a tuple of all it's members.
+cardinalities of each of it's members. If you are not convinced, try writing
+down all possible values of `NaiveColorPrim`. In Typescript, there is a
+separation between types and interfaces. In this article we consider them all to
+be types, since an interface can be represented as a tuple of all it's members.
 
 Since we know that the amount of valid representations of colors were 3 and that
 cardinality of `NaiveColor` is 8, we can deduce that `NaiveColor` allows for
-_invalid data_. Invalid data can be a source of errors and bugs, thus we want to
-eliminate them by using types.
+_invalid data_. Invalid data can be a source of errors and bugs.
 
 There are product types, described above and there are also sum types, such as
-`GoodColor`. Another example is the type `MaybeBool`.
+`GoodColor`. Another example of a sum type is the type `MaybeBool`.
 
 ```
 type MaybeBool = boolean | Void;
 ```
 
-`MaybeBool` can either be true, false or Void. Thus
+`MaybeBool` can either be true, false or Void. And since it is a union type with
+two members, the cardinality is the cardinality of each of it's memebers.
 
 ```
 cardinality(MaybeBool) =
@@ -109,7 +107,7 @@ cardinality(boolean) + cardinality(Void) =
 2+1=3
 ```
 
-So sum types are called sum types because they're the sum of the cardinalities
+So we call sum types as sum types because they're the sum of the cardinalities
 of all their members. Product types are called product types because they are
 the product of all their members, intuitive right?
 
@@ -232,6 +230,7 @@ cardinality(State) = 1+∞+∞
 ```
 
 Much better, by taking a closer look at the problem we were solving and using
-cardinality we could conclude that we probably had the wrong representation for
-our state and found an alternative solution that is much more elegant. Now the
-bug that arose in the previous implementation can not happen anymore!
+cardinality we could reason that we had the wrong representation for our state.
+We could then take an alternative implementation and reason that that was a
+better representation of our state and use cardinality as a tool to reason as to
+why.

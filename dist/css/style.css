@@ -2,8 +2,7 @@
   font-family: "Gotham Book";
   font-style: normal;
   font-weight: 400;
-  src: local("Gotham Book"),
-    url("../res/gotham.otf") format("embedded-opentype");
+  src: local("Gotham Book"), url("../res/gotham.otf") format("opentype");
 }
 body {
   font-family: "Gotham Book" !important;

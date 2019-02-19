@@ -2,8 +2,9 @@ body {
   font-family: "Scheherazade", serif;
 }
 
-.sarabun {
-  font-family: "Sarabun", serif;
+.gotham {
+  font-family: "Gotham Book" !important;
+  src: url(res/gotham.otf) format("opentype");
 }
 
 .upcase {

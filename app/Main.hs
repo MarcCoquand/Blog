@@ -13,7 +13,7 @@ indexContext posts =
 -- | All the static assets can just be copied over from our site's source
 staticAssets :: SiteM ()
 staticAssets = 
-    copyFiles [ "css/", "js/" ]
+    copyFiles [ "css/", "js/", "res/" ]
 
 main :: IO ()
 main = 

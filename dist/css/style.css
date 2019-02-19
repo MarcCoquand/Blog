@@ -1,6 +1,9 @@
 @font-face {
-  font-family: "Gotham Book" !important;
-  src: url("../res/gotham.otf") format("embedded-opentype");
+  font-family: "Gotham Book";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Gotham Book"),
+    url("../res/gotham.otf") format("embedded-opentype");
 }
 body {
   font-family: "Gotham Book" !important;

@@ -8,8 +8,10 @@ body {
 }
 
 .gotham {
-  font-family: "Gotham Book" !important;
-  src: url(res/gotham.otf) format("opentype");
+  @font-face {
+    font-family: "Gotham Book" !important;
+    src: url("res/gotham.otf") format("embedded-opentype");
+  }
 }
 
 .upcase {

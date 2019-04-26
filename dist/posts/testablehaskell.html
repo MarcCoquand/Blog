@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Haskell is Not that Easy to Test</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Scheherazade:400,700"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7 pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu fw5 tracked">
+        <a href="/" class="link black hover-moon-gray">Marc Coquand</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="lh-copy dashed-list f3 pb3 fw5 mw6 auto ">
+        <h1 class="f1-ns scheherazade fw7 lh-title tc-ns ph3-ns">Haskell is Not that Easy to Test</h1>
+        <hr />
+        <p class="fw4 f3 pb0 pt3 ">2019-02-24</p>
+        <p>One of the common arguments for using Haskell is that Haskell is pure and thus easy to test. Purity in functions means that a function, given the same arguments, returns the same value. Purity gives us a lot benefits. Unit tests are trivial, we can be sure nothing funky is going to happen (like launching nukes). Haskellers also argue that Haskell is entirely pure. Now I ask you, dear reader, what is pure about the function below.</p>
+<pre><code>main :: IO String
+main =
+    do  line &lt;- getLine
+        putStrLn line</code></pre>
+<p>Is the function easy to write an automated unit test for? Nope. IO monads causes problems down the line because it allows creating imperative programs and thus we have gained nothing from any other language. Say we are creating an authentication system using Json Web Tokens. We want to generate the token, set an expiration date of this token based on one week from now. What we might create is something like token function below.</p>
+<pre><code>token :: Key User -&gt; IO (Maybe WebToken)
+token user =
+    do  currentTime &lt;- Time.Posix.getPOSIXTime
+        let oneWeek = 604800000
+        let expirationDate = currentTime + oneWeek
+        let maybeToken = encode $ Token user expirationDate
+        return maybeToken</code></pre>
+<p>Now this function I wrote a while back. It looked fine at the time but notice that, regardless of Haskell is pure or not, we have a function that is actually a bit tricky to unit test. If I were to write it today I would write it like this:</p>
+<pre><code>class MonadTime m where
+    getTime :: m POSIXTime
+
+instance MonadTime IO where
+    getTime = Time.Posix.getPOSIXTime
+
+instance MonadTime ((-&gt;) POSIXTime) where
+    -- Allows us to call functions with the constraint MonadTime
+    -- with an extra argument containing a mock value.
+    getTime = id
+
+addWeek :: POSIXTime -&gt; POSIXTime
+addWeek currentTime =
+    currentTime + oneWeek
+    where
+        oneWeek = 604800000
+
+token :: MonadTime m =&gt; Key User -&gt; m (Maybe WebToken)
+token user =
+    do  currentTime &lt;- getTime
+        let expirationDate = addWeek currentTime
+        let maybeToken = encode $ Token user expirationDate
+        return maybeToken</code></pre>
+<p>With this definition, unit tests becomes trivial. Now there are other posts that explains writing better Haskell code <a href="https://www.parsonsmatt.org/2018/03/22/three_layer_haskell_cake.html">here</a>. My point with this post is to clarify that testing is still not free in Haskell, it requires rigor and research and the uninitiated can write untestable code. It is also to clarify that regardless if Haskell is pure or not we still do not get the benefits of purity everywhere in our code. In fact we could write our Haskell code in one massive main function and use <code>return</code> on pure functions and we would have gained no benefits whatsoever from normal code. This means that we still need to introduce some discipline and rigor to our coworkers that are not familiar with Haskell. The new solution, while testable, is a lot more complex and requires understanding more advanced Haskell concepts like MTL.</p>
+        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
+          >‹ View more posts</a
+        >
+      </div>
+    </article>
+  </body>
+</html>

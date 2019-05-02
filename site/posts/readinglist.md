@@ -54,6 +54,10 @@ list represent that.
 - [Naming Things in Elm](https://www.youtube.com/watch?v=trgET9YU37M)
 - [Why I Indent My Code 8
   Spaces](https://simplystatistics.org/2018/07/27/why-i-indent-my-code-8-spaces/)
+- [Wire Once, Rewire
+  Twice](https://skillsmatter.com/skillscasts/12299-wire-once-rewire-twice)
+- [Falsehoods Programmers Believe About
+  Names](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)
 
 ### Papers
 

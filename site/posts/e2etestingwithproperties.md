@@ -53,9 +53,13 @@ Next we need to integration test the html code consisting of a view function. A
 view function is defined as `view : State -> Html Action`. We can create a
 symbolic representation of this by creating a function which takes a state and
 returns a list of actions, `viewSymbolic : State -> [Actions]`. Now the property
-we need to test is that `forall State s. actions(view(s)) === viewSymbolic(s)`
-where `actions : Html Action -> [Action]`, it extracts all the actions that view
-can dispatch.
+we need to test is that, for a function `actions` that extracts the actions a
+view can dispatch.
+
+```
+forall State s. actions(view(s)) === viewSymbolic(s)
+    where actions : Html Action -> [Action]
+```
 
 Now we can test the entire application. If we use the TEA architecture we have
 one big state and a sum type for our actions. We have a tested interface for the

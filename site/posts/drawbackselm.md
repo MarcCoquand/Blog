@@ -27,7 +27,7 @@ Allowing us to execute the side effects would also allow for rapid End2End tests
 as then we could feed update an initial model and a set of commands and ensure
 that at the end we get the correct resulting model. This would make quality
 assurance a lot easier and allow us to verify that the program follows the
-specification.
+specification by testing that the user stories are doable.
 
 Almost all projects I have looked at in Elm have little to no tests. In [Richard
 Feldman's SPA example](https://github.com/rtfeldman/elm-spa-example) we find

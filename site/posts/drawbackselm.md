@@ -38,7 +38,7 @@ bug you find while manually testing is trivial to fix and would not have shown
 up in any unit test. I suspect that other people consider the same thing so they
 do not bother. I find this is a big red flag.
 
-## Sometimes you actually want to encapsulate state
+### Sometimes you actually want to encapsulate state
 
 If you look at a lot of published elm sites you will find that a lot of them use
 almost no animations. While I can not access the main service of

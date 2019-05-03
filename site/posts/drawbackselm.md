@@ -14,19 +14,20 @@ some of them here which can pose a problem.
 There are parts of the software that Elm's type system can not guarantee are
 error free and where regressions can sneak in. For example if our program
 interacts with a REST api and the endpoints change, the program would stop
-working. In Elm, there is no way to write any test to ensure this will not
-happen. The reason is because Elm is a pure language that does not execute any
-side effects. In summary Elm has no way of writing integration tests. To write
-integration tests in Elm there must be a way to execute Cmds and ensure that
-right response is returned. This is also integral to writing property-based
-tests for state machines, where we model the side effects with a pure
-implementation and compare the effectful model to the pure model and ensure they
-function the same way for any data.
+working. In Elm, there is no way to write any test to check for this. The reason
+is because Elm is a pure language that does not execute any side effects. Elm
+has no way of writing integration tests. To write integration tests in Elm there
+must be a way to execute commands and ensure that right they return the correct
+response. This is also integral to writing property-based tests for state
+machines, where we model the side effects with a pure implementation and compare
+the effectful model to the pure model and ensure they function the same way for
+any data.
 
-Allowing us to execute the side effects would also allow for End2End tests as
-then we could could feed update an initial model and a set of commands and
-ensure that at the end we get the correct resulting model. This would make
-quality assurance a lot easier.
+Allowing us to execute the side effects would also allow for rapid End2End tests
+as then we could feed update an initial model and a set of commands and ensure
+that at the end we get the correct resulting model. This would make quality
+assurance a lot easier and allow us to verify that the program follows the
+specification.
 
 Almost all projects I have looked at in Elm have little to no tests. In [Richard
 Feldman's SPA example](https://github.com/rtfeldman/elm-spa-example) we find

@@ -9,7 +9,7 @@ incredible the language is. But, alas in software engineering there is no such
 thing as a silver bullet. Elm does have it's drawbacks and I am going to list
 some of them here which can pose a problem.
 
-## Testing Elm is actually not that easy
+### Testing Elm is actually not that easy
 
 There are parts of the software that Elm's type system can not guarantee are
 error free and where regressions can sneak in. For example if our program
@@ -58,7 +58,7 @@ not being in the middle of a transaction to moving to one that is. That is,
 sometimes model a resource as being managed rather than a value being
 transformed.
 
-## No communication on what will change
+### No communication on what will change
 
 When a new version of Elm comes out, all packages need to explicitly be updated
 to the latest version, even if they do not need modifications. In the transition
@@ -66,7 +66,7 @@ from Elm 0.18 to Elm 0.19 they removed user defined infix operators. While I
 applaud this change, these deprecations were not communicated unless you
 explicitly asked in the Slack channel. Speaking of Slack channel
 
-## All communication goes via the Slack channel
+### All communication goes via the Slack channel
 
 The official Slack channel is where most Elm people hang out. This means that
 common questions can not be found on Stackoverflow but

@@ -64,7 +64,8 @@ When a new version of Elm comes out, all packages need to explicitly be updated
 to the latest version, even if they do not need modifications. In the transition
 from Elm 0.18 to Elm 0.19 they removed user defined infix operators. While I
 applaud this change, these deprecations were not communicated unless you
-explicitly asked in the Slack channel. Speaking of Slack channel
+explicitly asked in the Slack channel. It makes it very scary to depend on
+libraries and also makes it harder to prepare for changes to come.
 
 ### All communication goes via the Slack channel
 

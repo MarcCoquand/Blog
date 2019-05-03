@@ -41,22 +41,22 @@ do not bother. I find this is a big red flag.
 ### Sometimes you actually want to encapsulate state
 
 If you look at a lot of published elm sites you will find that a lot of them use
-almost no animations. While I can not access the main service of
-[www.noredink.com](www.noredink.com), all the interactive parts had no
-transitions or animations. It turns out that animating in Elm is a tedious
-endeavour. For each transition in the animation it must be sent to the global
-update function and our global model must also keep track of the transition
-itself. This adds a lot of noise and boilerplate to our code. In a big projects,
-do we want the entire system to concern itself with animations of a button?
-There can be a lot of animations and transitions, making our update function and
-Msg type massive and span across files. This is a place where techniques from
-OOP can come in handy. OOP is good at a modeling stateful system that transition
-gracefully between internal positions. Good examples of this is a button
-animation going from untouched to hovered. It will not affect the main state at
-all. Another example is the evolution of a database cursor, where it moves from
-not being in the middle of a transaction to moving to one that is. That is,
-sometimes model a resource as being managed rather than a value being
-transformed.
+almost no animations. Looking at websites such as
+[www.noredink.com](www.noredink.com) and [www.elm-lang.org](www.elm-lang.org),
+all the interactive parts had no transitions or animations. It turns out that
+animating in Elm is a tedious endeavour. For each transition in the animation it
+must be sent to the global update function and our global model must also keep
+track of the transition itself. This adds a lot of noise and boilerplate to our
+code. In a big projects, do we want the entire system to concern itself with
+animations of a button? There can be a lot of animations and transitions,
+making our update function and Msg type massive and span across files. This is a
+place where techniques from OOP can come in handy. OOP is good at a modeling
+stateful system that transition gracefully between internal positions. Good
+examples of this is a button animation going from untouched to hovered. It will
+not affect the main state at all. Another example is the evolution of a database
+cursor, where it moves from not being in the middle of a transaction to moving
+to one that is. That is, sometimes model a resource as being managed rather than
+a value being transformed.
 
 ### No communication on what will change
 

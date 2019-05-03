@@ -1,6 +1,6 @@
 ---
 date: 2019-05-03
-title: My Criticism of Elm
+title: Challenges in Elm
 author: Marc Coquand
 ---
 

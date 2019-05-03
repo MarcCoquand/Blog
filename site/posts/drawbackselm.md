@@ -36,7 +36,7 @@ that it is overkill to test Elm systems. Perhaps there is a case to be made that
 integration tests in Elm are not worth their costs. In my experience any
 bug you find while manually testing is trivial to fix and would not have shown
 up in any unit test. I suspect that other people consider the same thing so they
-do not bother. I find this is a big red flag.
+do not bother. I find this to be a big red flag however.
 
 ### Sometimes you actually want to encapsulate state
 

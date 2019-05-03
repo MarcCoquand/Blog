@@ -48,15 +48,16 @@ animating in Elm is a tedious endeavour. For each transition in the animation it
 must be sent to the global update function and our global model must also keep
 track of the transition itself. This adds a lot of noise and boilerplate to our
 code. In a big projects, do we want the entire system to concern itself with
-animations of a button? There can be a lot of animations and transitions,
-making our update function and Msg type massive and span across files. This is a
-place where techniques from OOP can come in handy. OOP is good at a modeling
-stateful system that transition gracefully between internal positions. Good
-examples of this is a button animation going from untouched to hovered. It will
-not affect the main state at all. Another example is the evolution of a database
-cursor, where it moves from not being in the middle of a transaction to moving
-to one that is. That is, sometimes model a resource as being managed rather than
-a value being transformed.
+animations of a button? There can be a lot of animations and transitions, and
+each one of them must go through the update function and Msg type across
+multiple files for large projects. This is a place where techniques from OOP can
+come in handy. OOP is good at a modeling stateful system that transition
+gracefully between internal positions. Good examples of this is a button
+animation going from untouched to hovered. It will not affect the main state at
+all. Another example is the evolution of a database cursor, where it moves from
+not being in the middle of a transaction to moving to one that is. That is,
+sometimes model a resource as being managed rather than a value being
+transformed.
 
 ### No communication on what will change
 

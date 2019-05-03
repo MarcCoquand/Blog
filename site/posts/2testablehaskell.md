@@ -1,7 +1,7 @@
 ---
+date: 2019-02-24
 title: Haskell is Not that Easy to Test
 author: Marc Coquand
-date: 2019-02-24
 ---
 
 One of the common arguments for using Haskell is that Haskell is pure and thus

@@ -1,7 +1,7 @@
 ---
+date: 2019-02-03
 title: Bug Eraser Data Structures in Typescript
 author: Marc Coquand
-date: 2019-02-03
 ---
 
 The choices of data structures can have a big impact on our software. For

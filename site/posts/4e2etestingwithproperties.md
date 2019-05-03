@@ -1,7 +1,7 @@
 ---
+date: 2019-05-02
 title: Rapid E2E-testing with Property-based Integration Tests.
 author: Marc Coquand
-date: 2019-05-02
 ---
 
 To ensure that our program works correctly there are three layers that need to

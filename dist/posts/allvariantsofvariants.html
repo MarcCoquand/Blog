@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>All the variants of Variants and their practical uses</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Scheherazade:400,700"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7 pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu fw5 tracked">
+        <a href="/" class="link black hover-moon-gray">Marc Coquand</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="lh-copy dashed-list f3 pb3 fw5 mw6 auto ">
+        <h1 class="f1-ns scheherazade fw7 lh-title tc-ns ph3-ns">All the variants of Variants and their practical uses</h1>
+        <hr />
+        <p class="fw4 f3 pb0 pt3 ">2019-06-15</p>
+        <p>ReasonML and Ocaml feature a language construct called variants. Most languages feature records which are a way of saying this <strong>and</strong> that, while variants allows expressing this <strong>or</strong> that. From other languages you might know a simplified version called enums, variants are an extension of those. The strength of variants is it's ability to reduce bugs.</p>
+<p>ReasonML features three variants that this article will cover: variants, polymorphic variants and generalized variants (a.k.a. GADTs). This article assumes some familiarity with Redux and ReasonML.</p>
+<h1 id="your-first-variant">Your first variant</h1>
+<p>To create a variant in ReasonML the syntax is simple:</p>
+<pre><code>type catOrDog = Cat | Dog;</code></pre>
+<p>This defines a variant CatOrDog with two <strong>constructors</strong>, meaning we can construct the variant by expressing <code>let cat = Cat</code>. Using variants in code is simple:</p>
+<pre><code>let feed = catOrDog =&gt;
+    switch(catOrDog) {
+    | Cat =&gt; feedCatFood
+    | Dog =&gt; feedDogFood
+    }</code></pre>
+<p>Switch statements are like the case or if/else constructs in other languages. A variant can also take constructor arguments:</p>
+<pre><code>type age = int
+type name = string
+type nameTag = string
+type account =
+    | Facebook(name,age)
+    | Github(name, nameTag)</code></pre>
+<p>Constructor arguments are like function arguments. These can also be matched on in a switch statement:</p>
+<pre><code>let greeting =
+  switch (myAccount) {
+  | Facebook(name, age) =&gt; &quot;Hi &quot; ++ name ++ &quot;, you&#39;re &quot; ++ string_of_int(age) ++ &quot;-year-old.&quot;
+  | Github(name,nameTag) =&gt; &quot;Hello &quot; ++ name ++ &quot; a.k.a. &quot; ++ nameTag ++ &quot;.&quot;
+  };</code></pre>
+<p>Variants can also be parameterized over variables, so for example an error handling type:</p>
+<pre><code>type compute(&#39;a) =
+    | Successful(&#39;a)
+    | Failed
+
+// Somewhere else
+let getUser = id =&gt;
+    Js.Promise.(Fetch.fetch(&#39;/api/user/&#39; ++ id)
+        |&gt; then_(user =&gt; Successful(user)
+        |&gt; catch(_err =&gt; failed)</code></pre>
+<h2 id="use-case-redux-reducers">Use case: Redux reducers</h2>
+<p>A reducer is a function that takes some state and an action. Actions are a description of a change request. Thus they are perfect candidate for variants. For example this todo application:</p>
+<pre><code>type actions =
+    | AddTodo
+    | ToggleTodo
+    | RemoveTodo
+
+
+// Later on
+let reducer = (model, action) =&gt;
+    switch(action) {
+    | AddTodo =&gt; ...
+    ...
+    }</code></pre>
+<p>Now the compiler will force us to handle every possible action that can be performed by the view, great!</p>
+<h1 id="polymorphic-variants-variants-sliced-up">Polymorphic Variants, variants sliced up!</h1>
+<p>Variants must always tie to some type, it's impossible to create a <code>let cat = Cat</code> unless a <code>type catOrSomething = Cat...</code> is declared beforehand. Polymorphic variants do not have this constraint, they can exist independently from types. The syntax for polymorphic variants compared to normal variants are as follows:</p>
+<pre><code>// Normal variant
+type rgb = Red | Green | Blue
+// Polymorphic variant
+type rgb = [`Red | `Green | `Blue]</code></pre>
+<p>However these polymorphic variants do not need to be declared beforehand.</p>
+<pre><code>let number = (i: int) =&gt; `Int(i) /* returns [&gt; `Int(int)] /*</code></pre>
+<p>Note the <code>&gt;</code> symbol in the code above, this is explored later. The polymorphic variants can also be extended:</p>
+<pre><code>type rgb = [`Red | `Green | `Blue]
+type colors = [rgb | `Purple | `Green]</code></pre>
+<p>Polymorphic variants use a global namespace.</p>
+<h2 id="upper-and-lower-bounds-for-polymorphic-variants">Upper and lower bounds for polymorphic variants</h2>
+<p>Notice the <code>&gt;</code> symbol in the code above, it indicates the <em>lower bound</em> of the type. In other words, what the type can contain at least to work. On the other end, there is <code>&lt;</code> to indicate what the type must contain at most to work. If the reducer declared earlier was instead a polymorphic variant:</p>
+<pre><code>// Redeclared action as polymorphic variant
+// type action = [`AddTodo | `ToggleTodo | `RemoveTodo]
+// is not neccesary
+let reducer = (state, action) =&gt;
+    switch(action) {
+    | `AddTodo =&gt; ...
+    | `ToggleTodo =&gt; ...
+    | `RemoveTodo =&gt; ...
+    }</code></pre>
+<p>ReasonML would infer the type of action to be <code>[&lt; `AddTodo | `ToggleTodo | `RemoveTodo]</code>. This makes sense, reducer can not handle an action <code>`UpdateTodo</code>.</p>
+<h2 id="use-case-localization">Use case: Localization</h2>
+<p>At first, variants seem like a fantastic way to handle localization. The naive solution is to create two variants, one for language and one for the phrase. So this could look something like:</p>
+<pre><code>// Language.re
+type language = En | Fr
+type phrase = HelloComponentGreeting | OtherComponentWithGoodbye
+let translate = (language, phrase) =&gt;
+    switch((language,phrase)) {
+    | (En, HelloComponentGreeting) =&gt; &quot;Hello&quot;
+    | (En, OtherComponentWithGoodbye) =&gt; &quot;Goodbye&quot;
+    | (Fr, HelloComponentGreeting) =&gt; &quot;Bonjour&quot;
+    | (Fr, OtherComponentWithGoodbye) =&gt; &quot;Au revoir&quot;
+    }
+// Hello.re
+let component = (lang) =&gt;
+    &lt;h1&gt;Language.translate(lang, Language.HelloComponentGreeting)&lt;/h1&gt;</code></pre>
+<p>In an application, this would mean that every single phrase would have to be inserted into a massive switch case. Also every single component in the system would be dependent on a file Language.re. By using polymorphic variants, components and their translations can be developed in an individual file:</p>
+<pre><code>//Language.re
+type lang = En | Fr
+let rec translate = (lang, phrase) =&gt;
+    switch((lang, phrase)) {
+    | (En, `Greeting) =&gt; &quot;Hello&quot;
+    | (Fr, `Greeting) =&gt; &quot;Bonjour&quot;
+    | (En, `Goodbye) =&gt; &quot;Bye&quot;
+    | (En, `Offline) =&gt; &quot;You are offline&quot;
+    | (Fr, `Goodbye) =&gt; &quot;Au revoir&quot;
+    // Default to english if phrase not found
+    | (Fr, unsupported) =&gt; translate(En, unsupported)
+    }
+
+//Hello.re
+let component = (~translate: [&lt; `Greeting] =&gt; string) =&gt;
+    &lt;h1&gt;translate(`Greeting)&lt;/h1&gt;
+
+
+// App.re
+let component = (state) =&gt;
+    Hello.component(~translate=Language.translate(state.languge))</code></pre>
+<p>This still has all the same guarantees as before. <code>translate</code> is now instead taken as a function argument and needs to be able to handle <code>[&lt; `Greeting]</code> and return a string. This enables developing components in isolation without having to import the translate function. If the component contains a phrase not in the translate function it causes compile errors. This means that component writers can work in isolation and then wire up the cases afterwards.</p>
+<h1 id="generalized-variants">Generalized variants</h1>
+<p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name. To understand generalized variants, phantom types must be understood.</p>
+<h2 id="phantom-types-the-guards-above.">Phantom types, the guards above.</h2>
+<p>A phantom type is a type which never shows up on the right hand side.</p>
+<pre><code>type cat(&#39;phantom) = Cat</code></pre>
+<p>In the above code <code>'phantom</code> can be anything. For example <code>let intCat: cat(int) = Cat</code> is a valid construction. This means that the same value can have different types. A type can also have zero constructors, by declaring <code>type hungry</code> and never declaring what it equal. These values can never be constructed, only declared with types. This goes well with phantom type, consider a zombie invasion. A gated community would never want to accept any zombies, only humans that are alive. Of course a zombie is still a human, thus at a value level they might look the same. Luckily for us the type system can enforce this</p>
+<pre><code>type human(&#39;state) = Human
+type zombie
+type alive
+
+let guard = ... /* Protect the human */
+
+let enter = (human: human(alive)) =&gt;
+    guard(human)
+
+// Now if a zombie attempts to enter
+let badGuy: human(zombie) = Human
+
+enter(badGuy) // Error, only alive humans allowed. Compiler saved us.</code></pre>
+<p>So phantom types can be used to encode things to the compiler when the type information is not enough. Another example is encoding</p>
+<pre><code>// Unencoded and encoded values are both strings
+type str(&#39;a) = string
+type unencoded
+type encoded
+
+let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
+<p>With phantom types, it is no longer possible to encode an encoded string, and since the only way to create something of type <code>str(encoded)</code> is through the <code>encode</code> function, the compiler ensures that strings are only encoded once by using <code>encode</code>.</p>
+<h2 id="back-to-generalized-variants">Back to generalized variants</h2>
+<p>A generalized variant is a variant which can return a phantom type. Let's look at an example:</p>
+<pre><code>type boolOrInt(&#39;a) =
+    | Bool: boolOrInt(bool)
+    | Int: boolOrInt(int)</code></pre>
+<p>Notice that the variant now has a return type of <code>boolOrInt('a)</code>. This value can be extracted:</p>
+<pre><code>let evaluate = (boolOrInt: boolOrInt(&#39;a)): &#39;a =&gt;
+    switch(boolOrInt) {
+    | Bool =&gt; true
+    | Int =&gt; 5
+    }</code></pre>
+<p>However, if you try to compile this you will run into errors. This is because the variable needs to be quantified, which is a topic for another day. For now just change the function.</p>
+<pre><code>let evaluate: type a. boolOrInt(a) =&gt; a =
+    switch(boolOrInt) {
+    | Bool =&gt; true
+    | Int =&gt; 5
+    }</code></pre>
+<p>and it will work! Notice that the return type is the same as the type in the <code>boolOrInt</code> constructor's return type. So if you attempt to declare</p>
+<pre><code>let evaluateWithError: type a. boolOrInt(a) =&gt; a =
+    switch(boolOrInt) {
+    | Bool =&gt; &quot;I&#39;m a string&quot;
+    | Int =&gt; 5
+    }</code></pre>
+<p>the compiler will generate an error. The return type of the function <strong>must</strong> be the same as the return type of <code>boolOrInt</code>. <code>evaluateWithError</code> makes the mistake that it attempts to return a string when the <code>boolOrInt</code> declared that for the constructor Bool, the <em>phantom type</em> is a bool as well. The type signature states that <code>boolOrInt(a) =&gt; a</code>, so for the constructor <code>Bool</code>, <code>boolOrInt(bool)</code> and for the constructor <code>Int</code>, <code>boolOrInt(int)</code>. However <code>evaluateWithError</code> tries to do <code>boolOrInt(bool) =&gt; string</code>, which the type signature does not allow.</p>
+<p>With all of this said, the example is not particularly exciting. Let's do something more interesting</p>
+<h2 id="use-case-inversion-of-control">Use case: Inversion of control</h2>
+<p>When creating large scale software it can be dangerous to rely on one dependency. For example if the software developed relies on Firebase and the requirements change so now it has to rely on Postgres then all code needs to be rewritten. Inversion of control mitigates this by hiding dependency details. This is normally done with interfaces. So for example</p>
+<pre><code>type operations =
+    { getAll: list(todo),
+      delete: string =&gt; unit,
+      update: string =&gt; todo =&gt; unit
+    }
+
+let firebaseOps: operations = ...
+
+let mockedOps: operations
+</code></pre>
+<p>This also makes it easy to run the system locally by using a mocked version. With generalized variants, this approach is even more powerful:</p>
+<pre><code>type operations(&#39;a) =
+    | GetAll: operations(list(todo))
+    | Delete(string): operations(unit)
+    | Update(string, todo): operations(unit)</code></pre>
+<p>So we have encoded the operations possible by the database, let's create an evaluator for this:</p>
+<pre><code>let evaluate = type a. operations(a) =&gt; a = ops =&gt;
+    switch(ops) {
+    | GetAll =&gt; Firebase.fetchTodos
+    | Delete(id) =&gt; Firebase.deleteTodo(id)
+    | Update(id, todo) =&gt; Firbase.update(id,todo)</code></pre>
+<p>So far this has yielded much. However after updating or deleting a todo, the application should also fetch the new list. So let's encode that</p>
+<pre><code>type operations(&#39;a) =
+    | GetAll: operations(list(todo))
+    | Delete(string): operations(unit)
+    | Update(string, todo): operations(unit)
+    | Sequence(operations(unit),operations(&#39;b): operations(&#39;b)
+
+let rec evaluate = type a. operations(a) =&gt; a = ops =&gt;
+    switch(ops) {
+    | GetAll =&gt; Firebase.fetchTodos
+    | Delete(id) =&gt; Firebase.deleteTodo(id)
+    | Update(id, todo) =&gt; Firbase.update(id,todo)
+    | Sequence(op1, op2) =&gt;
+        { evaluate(op1);
+          // op1 returns a unit so we don&#39;t care about that
+          evaluate(op2);
+         }</code></pre>
+<p>Notice that evaluate is now recursive. If two operations are sequenced we want to run evaluate on each one of them. So now we can describe our effects more easily:</p>
+<pre><code>// Effect.re
+let getAll = GetAll
+let delete = id =&gt; Sequence(Delete(id), getAll)
+let update = (string,todo) = Sequence(update(string,todo), getAll)</code></pre>
+<p>Now this approach has pros over the interface approach. For one, testing is greatly simplified. Let's revisit the reducer from earlier</p>
+<pre><code>let reducer = (state, action): (state, effect)  =&gt;
+    switch(action) {
+    | Delete(id) =&gt; (state, `RunEffect(Effect.delete))
+    | SetTodos(todos) =&gt; ({...state, todos}, `NoEffect)</code></pre>
+<p>The reducer does still not perform any side effects, it just declares which side effect it would like to run. This makes testing reducers super simple, no mocking needed! Testing is as simple as checking that <code>reducer(state,Delete(id)) == (state, `RunEffect(Effect.delete))</code>. It is so simple it barely feels necessary to test.</p>
+<p>For testing the effects themselves, generalized variants can be used in conjunction with property-based testing, which allows us to test each dependency in isolation and still be sure it works when combined with other applications. However this is out of scope for this article.</p>
+<p>Hopefully this gave you an intuition how variants are useful and some guides on how you can use them in your code.</p>
+        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
+          >‹ View more posts</a
+        >
+      </div>
+    </article>
+  </body>
+</html>

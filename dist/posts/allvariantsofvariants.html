@@ -34,7 +34,7 @@
         <p class="fw4 f3 pb0 pt3 ">2019-06-15</p>
         <p>ReasonML and Ocaml feature a language construct called variants. Most languages feature records which are a way of saying this <strong>and</strong> that, while variants allows expressing this <strong>or</strong> that. From other languages you might know a simplified version called enums, variants are an extension of those. The strength of variants is it's ability to reduce bugs.</p>
 <p>ReasonML features three variants that this article will cover: variants, polymorphic variants and generalized variants (a.k.a. GADTs). This article assumes some familiarity with Redux and ReasonML.</p>
-<h1 id="your-first-variant">Your first variant</h1>
+<h2 id="your-first-variant">Your first variant</h2>
 <p>To create a variant in ReasonML the syntax is simple:</p>
 <pre><code>type catOrDog = Cat | Dog;</code></pre>
 <p>This defines a variant CatOrDog with two <strong>constructors</strong>, meaning we can construct the variant by expressing <code>let cat = Cat</code>. Using variants in code is simple:</p>
@@ -66,7 +66,7 @@ let getUser = id =&gt;
     Js.Promise.(Fetch.fetch(&#39;/api/user/&#39; ++ id)
         |&gt; then_(user =&gt; Successful(user)
         |&gt; catch(_err =&gt; failed)</code></pre>
-<h2 id="use-case-redux-reducers">Use case: Redux reducers</h2>
+<h3 id="use-case-redux-reducers">Use case: Redux reducers</h3>
 <p>A reducer is a function that takes some state and an action. Actions are a description of a change request. Thus they are perfect candidate for variants. For example this todo application:</p>
 <pre><code>type actions =
     | AddTodo
@@ -81,7 +81,7 @@ let reducer = (model, action) =&gt;
     ...
     }</code></pre>
 <p>Now the compiler will force us to handle every possible action that can be performed by the view, great!</p>
-<h1 id="polymorphic-variants-variants-sliced-up">Polymorphic Variants, variants sliced up!</h1>
+<h2 id="polymorphic-variants-variants-sliced-up">Polymorphic Variants, variants sliced up!</h2>
 <p>Variants must always tie to some type, it's impossible to create a <code>let cat = Cat</code> unless a <code>type catOrSomething = Cat...</code> is declared beforehand. Polymorphic variants do not have this constraint, they can exist independently from types. The syntax for polymorphic variants compared to normal variants are as follows:</p>
 <pre><code>// Normal variant
 type rgb = Red | Green | Blue
@@ -93,7 +93,7 @@ type rgb = [`Red | `Green | `Blue]</code></pre>
 <pre><code>type rgb = [`Red | `Green | `Blue]
 type colors = [rgb | `Purple | `Green]</code></pre>
 <p>Polymorphic variants use a global namespace.</p>
-<h2 id="upper-and-lower-bounds-for-polymorphic-variants">Upper and lower bounds for polymorphic variants</h2>
+<h3 id="upper-and-lower-bounds-for-polymorphic-variants">Upper and lower bounds for polymorphic variants</h3>
 <p>Notice the <code>&gt;</code> symbol in the code above, it indicates the <em>lower bound</em> of the type. In other words, what the type can contain at least to work. On the other end, there is <code>&lt;</code> to indicate what the type must contain at most to work. If the reducer declared earlier was instead a polymorphic variant:</p>
 <pre><code>// Redeclared action as polymorphic variant
 // type action = [`AddTodo | `ToggleTodo | `RemoveTodo]
@@ -105,7 +105,7 @@ let reducer = (state, action) =&gt;
     | `RemoveTodo =&gt; ...
     }</code></pre>
 <p>ReasonML would infer the type of action to be <code>[&lt; `AddTodo | `ToggleTodo | `RemoveTodo]</code>. This makes sense, reducer can not handle an action <code>`UpdateTodo</code>.</p>
-<h2 id="use-case-localization">Use case: Localization</h2>
+<h3 id="use-case-localization">Use case: Localization</h3>
 <p>At first, variants seem like a fantastic way to handle localization. The naive solution is to create two variants, one for language and one for the phrase. So this could look something like:</p>
 <pre><code>// Language.re
 type language = En | Fr
@@ -143,9 +143,9 @@ let component = (~translate: [&lt; `Greeting] =&gt; string) =&gt;
 let component = (state) =&gt;
     Hello.component(~translate=Language.translate(state.languge))</code></pre>
 <p>This still has all the same guarantees as before. <code>translate</code> is now instead taken as a function argument and needs to be able to handle <code>[&lt; `Greeting]</code> and return a string. This enables developing components in isolation without having to import the translate function. If the component contains a phrase not in the translate function it causes compile errors. This means that component writers can work in isolation and then wire up the cases afterwards.</p>
-<h1 id="generalized-variants">Generalized variants</h1>
+<h2 id="generalized-variants">Generalized variants</h2>
 <p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name. To understand generalized variants, phantom types must be understood.</p>
-<h2 id="phantom-types-the-guards-above.">Phantom types, the guards above.</h2>
+<h3 id="phantom-types-the-guards-above.">Phantom types, the guards above.</h3>
 <p>A phantom type is a type which never shows up on the right hand side.</p>
 <pre><code>type cat(&#39;phantom) = Cat</code></pre>
 <p>In the above code <code>'phantom</code> can be anything. For example <code>let intCat: cat(int) = Cat</code> is a valid construction. This means that the same value can have different types. A type can also have zero constructors, by declaring <code>type hungry</code> and never declaring what it equal. These values can never be constructed, only declared with types. This goes well with phantom type, consider a zombie invasion. A gated community would never want to accept any zombies, only humans that are alive. Of course a zombie is still a human, thus at a value level they might look the same. Luckily for us the type system can enforce this</p>
@@ -170,7 +170,7 @@ type encoded
 
 let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
 <p>With phantom types, it is no longer possible to encode an encoded string, and since the only way to create something of type <code>str(encoded)</code> is through the <code>encode</code> function, the compiler ensures that strings are only encoded once by using <code>encode</code>.</p>
-<h2 id="back-to-generalized-variants">Back to generalized variants</h2>
+<h3 id="back-to-generalized-variants">Back to generalized variants</h3>
 <p>A generalized variant is a variant which can return a phantom type. Let's look at an example:</p>
 <pre><code>type boolOrInt(&#39;a) =
     | Bool: boolOrInt(bool)
@@ -195,7 +195,7 @@ let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
     }</code></pre>
 <p>the compiler will generate an error. The return type of the function <strong>must</strong> be the same as the return type of <code>boolOrInt</code>. <code>evaluateWithError</code> makes the mistake that it attempts to return a string when the <code>boolOrInt</code> declared that for the constructor Bool, the <em>phantom type</em> is a bool as well. The type signature states that <code>boolOrInt(a) =&gt; a</code>, so for the constructor <code>Bool</code>, <code>boolOrInt(bool)</code> and for the constructor <code>Int</code>, <code>boolOrInt(int)</code>. However <code>evaluateWithError</code> tries to do <code>boolOrInt(bool) =&gt; string</code>, which the type signature does not allow.</p>
 <p>With all of this said, the example is not particularly exciting. Let's do something more interesting</p>
-<h2 id="use-case-inversion-of-control">Use case: Inversion of control</h2>
+<h3 id="use-case-inversion-of-control">Use case: Inversion of control</h3>
 <p>When creating large scale software it can be dangerous to rely on one dependency. For example if the software developed relies on Firebase and the requirements change so now it has to rely on Postgres then all code needs to be rewritten. Inversion of control mitigates this by hiding dependency details. This is normally done with interfaces. So for example</p>
 <pre><code>type operations =
     { getAll: list(todo),

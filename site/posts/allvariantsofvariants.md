@@ -14,7 +14,7 @@ ReasonML features three variants that this article will cover: variants,
 polymorphic variants and generalized variants (a.k.a. GADTs). This article
 assumes some familiarity with Redux and ReasonML.
 
-# Your first variant
+## Your first variant
 
 To create a variant in ReasonML the syntax is simple:
 
@@ -71,7 +71,7 @@ let getUser = id =>
         |> catch(_err => failed)
 ```
 
-## Use case: Redux reducers
+### Use case: Redux reducers
 
 A reducer is a function that takes some state and an action. Actions are a
 description of a change request. Thus they are perfect candidate for variants.
@@ -95,7 +95,7 @@ let reducer = (model, action) =>
 Now the compiler will force us to handle every possible action that can be
 performed by the view, great!
 
-# Polymorphic Variants, variants sliced up!
+## Polymorphic Variants, variants sliced up!
 
 Variants must always tie to some type, it's impossible to create a `let cat = Cat` unless a `type catOrSomething = Cat...` is declared beforehand.
 Polymorphic variants do not have this constraint, they can exist independently
@@ -125,7 +125,7 @@ type colors = [rgb | `Purple | `Green]
 
 Polymorphic variants use a global namespace.
 
-## Upper and lower bounds for polymorphic variants
+### Upper and lower bounds for polymorphic variants
 
 Notice the `>` symbol in the code above, it indicates the _lower bound_ of the
 type. In other words, what the type can contain at least to work. On the other
@@ -147,7 +147,7 @@ let reducer = (state, action) =>
 ReasonML would infer the type of action to be `` [< `AddTodo | `ToggleTodo | `RemoveTodo] ``.
 This makes sense, reducer can not handle an action `` `UpdateTodo ``.
 
-## Use case: Localization
+### Use case: Localization
 
 At first, variants seem like a fantastic way to handle localization. The naive
 solution is to create two variants, one for language and one for the phrase. So
@@ -205,14 +205,14 @@ having to import the translate function. If the component contains a phrase not
 in the translate function it causes compile errors. This means that component
 writers can work in isolation and then wire up the cases afterwards.
 
-# Generalized variants
+## Generalized variants
 
 Last in the variants of variants is the generalized variant, also known as
 generalized algebraic data type, GADT, first-class phantom type, guarded
 recursive datatype, or equality-qualified type. Lots of variants on that name.
 To understand generalized variants, phantom types must be understood.
 
-## Phantom types, the guards above.
+### Phantom types, the guards above.
 
 A phantom type is a type which never shows up on the right hand side.
 
@@ -261,7 +261,7 @@ since the only way to create something of type `str(encoded)` is through the
 `encode` function, the compiler ensures that strings are only encoded once by
 using `encode`.
 
-## Back to generalized variants
+### Back to generalized variants
 
 A generalized variant is a variant which can return a phantom type. Let's look
 at an example:
@@ -318,7 +318,7 @@ signature does not allow.
 With all of this said, the example is not particularly exciting. Let's do
 something more interesting
 
-## Use case: Inversion of control
+### Use case: Inversion of control
 
 When creating large scale software it can be dangerous to rely on one
 dependency. For example if the software developed relies on Firebase and the

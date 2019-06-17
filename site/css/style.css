@@ -149,8 +149,11 @@ body {
 .stylish-box {
 }
 
-.hypertext-clone,
+.hypertext-clone {
+  color: #000;
+}
 .hypertext {
+  color: #fff;
 }
 
 .ht-row {

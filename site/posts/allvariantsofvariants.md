@@ -389,28 +389,17 @@ to run evaluate on each one of them. So now we can describe our effects more eas
 // Effect.re
 let getAll = GetAll
 let delete = id => Sequence(Delete(id), getAll)
-let update = (string,todo) = Sequence(update(string,todo), getAll)
+let update = (string,todo) = Sequence(Update(string,todo), getAll)
+let evaluate = type a. operations(a) => a = ops =>
+    switch(ops) {
+    | GetAll => Firebase.fetchTodos
+    | Delete(id) => Firebase.deleteTodo(id)
+    | Update(id, todo) => Firbase.update(id,todo)
+    | Sequence(op1,op2) {
+        evaluate(op1)
+        evaluate(op2)
+        }
 ```
 
-Now this approach has pros over the interface approach. For one, testing is
-greatly simplified. Let's revisit the reducer from earlier
-
-```
-let reducer = (state, action): (state, effect)  =>
-    switch(action) {
-    | Delete(id) => (state, `RunEffect(Effect.delete))
-    | SetTodos(todos) => ({...state, todos}, `NoEffect)
-```
-
-The reducer does still not perform any side effects, it just declares which side
-effect it would like to run. This makes testing reducers super simple, no
-mocking needed! Testing is as simple as checking that `` reducer(state,Delete(id)) == (state, `RunEffect(Effect.delete)) ``. It is so simple it barely feels
-necessary to test.
-
-For testing the effects themselves, generalized variants can be used in
-conjunction with property-based testing, which allows us to test each dependency
-in isolation and still be sure it works when combined with other applications.
-However this is out of scope for this article.
-
-Hopefully this gave you an intuition how variants are useful and some guides on
-how you can use them in your code.
+This approach has several advantages over the standard dependency injection
+approach for testing and maintenance, which will be explored in other articles.

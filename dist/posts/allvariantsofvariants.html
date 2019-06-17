@@ -239,15 +239,17 @@ let rec evaluate = type a. operations(a) =&gt; a = ops =&gt;
 <pre><code>// Effect.re
 let getAll = GetAll
 let delete = id =&gt; Sequence(Delete(id), getAll)
-let update = (string,todo) = Sequence(update(string,todo), getAll)</code></pre>
-<p>Now this approach has pros over the interface approach. For one, testing is greatly simplified. Let's revisit the reducer from earlier</p>
-<pre><code>let reducer = (state, action): (state, effect)  =&gt;
-    switch(action) {
-    | Delete(id) =&gt; (state, `RunEffect(Effect.delete))
-    | SetTodos(todos) =&gt; ({...state, todos}, `NoEffect)</code></pre>
-<p>The reducer does still not perform any side effects, it just declares which side effect it would like to run. This makes testing reducers super simple, no mocking needed! Testing is as simple as checking that <code>reducer(state,Delete(id)) == (state, `RunEffect(Effect.delete))</code>. It is so simple it barely feels necessary to test.</p>
-<p>For testing the effects themselves, generalized variants can be used in conjunction with property-based testing, which allows us to test each dependency in isolation and still be sure it works when combined with other applications. However this is out of scope for this article.</p>
-<p>Hopefully this gave you an intuition how variants are useful and some guides on how you can use them in your code.</p>
+let update = (string,todo) = Sequence(Update(string,todo), getAll)
+let evaluate = type a. operations(a) =&gt; a = ops =&gt;
+    switch(ops) {
+    | GetAll =&gt; Firebase.fetchTodos
+    | Delete(id) =&gt; Firebase.deleteTodo(id)
+    | Update(id, todo) =&gt; Firbase.update(id,todo)
+    | Sequence(op1,op2) {
+        evaluate(op1)
+        evaluate(op2)
+        }</code></pre>
+<p>This approach has several advantages over the standard dependency injection approach for testing and maintenance, which will be explored in other articles.</p>
         <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
           >‹ View more posts</a
         >

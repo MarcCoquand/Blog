@@ -166,7 +166,10 @@ let translate = (language, phrase) =>
     }
 // Hello.re
 let component = (lang) =>
-    <h1>Language.translate(lang, Language.HelloComponentGreeting)</h1>
+    <h1>Language
+        .translate
+        (lang, Language.HelloComponentGreeting)
+    </h1>
 ```
 
 In an application, this would mean that every single phrase would have to be

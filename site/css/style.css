@@ -78,8 +78,7 @@ body {
   font-weight: 700;
   font-family: "Fira Mono", serif;
   font-size: 1rem;
-  margin-top: 4rem;
-  margin-bottom: -0.8rem;
+  margin-bottom: -0.9rem;
 }
 
 .article pre code:before {

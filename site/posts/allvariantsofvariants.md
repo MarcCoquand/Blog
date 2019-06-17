@@ -95,7 +95,7 @@ let reducer = (model, action) =>
 Now the compiler will force us to handle every possible action that can be
 performed by the view, great!
 
-## Polymorphic Variants, variants sliced up!
+## Polymorphic Variants, variants sliced up
 
 Variants must always tie to some type, it's impossible to create a `let cat = Cat` unless a `type catOrSomething = Cat...` is declared beforehand.
 Polymorphic variants do not have this constraint, they can exist independently
@@ -217,7 +217,7 @@ generalized algebraic data type, GADT, first-class phantom type, guarded
 recursive datatype, or equality-qualified type. Lots of variants on that name.
 To understand generalized variants, phantom types must be understood.
 
-### Phantom types, the guards above.
+### Phantom types, invisible types.
 
 A phantom type is a type which never shows up on the right hand side.
 

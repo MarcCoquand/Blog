@@ -83,7 +83,7 @@ let reducer = (model, action) =&gt;
     ...
     }</code></pre>
 <p>Now the compiler will force us to handle every possible action that can be performed by the view, great!</p>
-<h2 id="polymorphic-variants-variants-sliced-up">Polymorphic Variants, variants sliced up!</h2>
+<h2 id="polymorphic-variants-variants-sliced-up">Polymorphic Variants, variants sliced up</h2>
 <p>Variants must always tie to some type, it's impossible to create a <code>let cat = Cat</code> unless a <code>type catOrSomething = Cat...</code> is declared beforehand. Polymorphic variants do not have this constraint, they can exist independently from types. The syntax for polymorphic variants compared to normal variants are as follows:</p>
 <pre><code>// Normal variant
 type rgb = Red | Green | Blue
@@ -152,7 +152,7 @@ let component = (state) =&gt;
 <p>This still has all the same guarantees as before. <code>translate</code> is now instead taken as a function argument and needs to be able to handle <code>[&lt; `Greeting]</code> and return a string. This enables developing components in isolation without having to import the translate function. If the component contains a phrase not in the translate function it causes compile errors. This means that component writers can work in isolation and then wire up the cases afterwards.</p>
 <h2 id="generalized-variants">Generalized variants</h2>
 <p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name. To understand generalized variants, phantom types must be understood.</p>
-<h3 id="phantom-types-the-guards-above.">Phantom types, the guards above.</h3>
+<h3 id="phantom-types-invisible-types.">Phantom types, invisible types.</h3>
 <p>A phantom type is a type which never shows up on the right hand side.</p>
 <pre><code>type cat(&#39;phantom) = Cat</code></pre>
 <p>In the above code <code>'phantom</code> can be anything. For example <code>let intCat: cat(int) = Cat</code> is a valid construction. This means that the same value can have different types. A type can also have zero constructors, by declaring <code>type hungry</code> and never declaring what it equal. These values can never be constructed, only declared with types. This goes well with phantom type, consider a zombie invasion. A gated community would never want to accept any zombies, only humans that are alive. Of course a zombie is still a human, thus at a value level they might look the same. Luckily for us the type system can enforce this</p>

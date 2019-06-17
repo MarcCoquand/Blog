@@ -33,7 +33,7 @@
           Rapid E2E-testing
         </h1>
         <hr />
-        <p class="fw4 f3 pb0 pt3-ns ">2019-05-02</p>
+        <p class="fw4 f3 pb0 pt3-ns firamono mid-gray tracked-mega">2019-05-02</p>
         <p>To ensure that our program works correctly there are three layers that need to check: the integration layer, unit layer and entire application, so called End2End-test. Common wisdom is that the higher up you move on these layers the more expensive it gets, so unit tests are cheap, integration tests more expensive and E2E-tests most expensive. Thus the recommendation is that you write mostly unit tests, then less integration tests and even less End2End-tests. This is called the testing pyramid.</p>
 <p>Testing environments can be difficult. But using property-based testing we can find more obscure concurrency bugs easier. When we do integration tests for environments using property based testing we create a symbolic representation that we test against the effectful representation. We then assert that after a random set of actions the symbolic and the effectful representation have the same properties. This means that afterwards when we have asserted they behave the same we can swap one for the other, ensuring that in practice our mock is the same as the actual implementation.</p>
 <p>We use End2End-test to give us confidence that the program works as it should from start to finish. They also allow us to make sure that we have completed the objectives in the specification. In practice, these tests are difficult since we need to spin up mocked environment with fake services running in the background. This means that it can be tempting to just skip these tests all together.</p>

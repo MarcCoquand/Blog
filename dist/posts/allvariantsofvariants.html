@@ -121,7 +121,10 @@ let translate = (language, phrase) =&gt;
     }
 // Hello.re
 let component = (lang) =&gt;
-    &lt;h1&gt;Language.translate(lang, Language.HelloComponentGreeting)&lt;/h1&gt;</code></pre>
+    &lt;h1&gt;Language
+        .translate
+        (lang, Language.HelloComponentGreeting)
+    &lt;/h1&gt;</code></pre>
 <p>In an application, this would mean that every single phrase would have to be inserted into a massive switch case. Also every single component in the system would be dependent on a file Language.re. By using polymorphic variants, components and their translations can be developed in an individual file:</p>
 <pre><code>//Language.re
 type lang = En | Fr

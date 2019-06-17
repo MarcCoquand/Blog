@@ -22,16 +22,16 @@
   </head>
   <body>
     <header class="pb2 mh3 mt4-ns mw7 pb5-ns mh5-ns dark-gray">
-      <h3 class="f6 gotham upcase ttu fw5 tracked">
-        <a href="/" class="link black hover-moon-gray">Marc Coquand</a>
+      <h3 class="f6 gotham upcase ttu f mid-gray w5 tracked">
+        <a href="/" class="link dark-gray hover-moon-gray">Marc Coquand</a>
         <b>/</b> Article
       </h3>
     </header>
     <article class="article dark-gray pb4 pb6-ns mh3">
-      <div class="lh-copy dashed-list f3 pb3 fw5 mw6 auto ">
-        <h1 class="f1-ns scheherazade fw7 lh-title tc-ns ph3-ns">Bug Eraser Data Structures in Typescript</h1>
-        <hr />
-        <p class="fw4 f3 pb0 pt3 ">2019-02-03</p>
+      <div class="dashed-list f3 pb3 fw5 mw6 auto ">
+        <h1 class="firamono f3-ns pb4-ns fw7 tc-ns lh-title">Bug Eraser Data Structures in Typescript</h1>
+        <hr class="mb4-ns" />
+        <p class="fw4 f3 pb0 pt5-ns ">2019-02-03</p>
         <p>The choices of data structures can have a big impact on our software. For example, should we represent our list of users as a hash map, array or stack? There are multiple aspects to take into account when choosing, such as performance. Choosing the wrong one makes it easier to introduce bugs into our software. This is what I will be demonstrating today, along with a tool how you can check manually if you have the right data structure.</p>
 <p>Say we want to create a program. The specification says this program will use three colors: blue, red and green. As we are good developers, we start of writing the types. We create an interface to represent our data type.</p>
 <pre><code>interface NaiveColor {

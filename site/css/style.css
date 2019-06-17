@@ -8,6 +8,10 @@ body {
   font-family: "Gotham Book" !important;
 }
 
+.firamono {
+  font-family: "Fira Mono", monospace;
+}
+
 .scheherazade {
   font-family: "Scheherazade", serif;
 }
@@ -24,7 +28,7 @@ body {
 }
 
 .article p {
-  line-height: 1.8;
+  line-height: 2;
   font-size: 0.9rem;
 }
 .article hr {
@@ -34,6 +38,7 @@ body {
   color: #333; /* old IE */
   border: none;
   background-color: #333; /* Modern Browsers */
+  margin-bottom: 3rem;
 }
 
 .article-size {
@@ -57,22 +62,25 @@ body {
   /* box-sizing: border-box; */
 }
 .article h2 {
-  font-size: 2.5rem;
-  margin-bottom: -0.3rem;
-  font-family: "Scheherazade", serif;
+  font-size: 1.5rem;
+  font-family: "Fira Mono", serif;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
   font-weight: 400;
-  line-height: 2rem;
+  line-height: 4rem;
 }
 .article h3 {
   line-height: 2rem;
-  font-weight: 400;
-  margin-bottom: -0.5rem;
-  font-family: "Scheherazade", serif;
-  margin-top: 2.9rem;
+  font-weight: 700;
+  font-family: "Fira Mono", serif;
+  font-size: 1rem;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
 }
 
 .article pre code:before {
   content: "λ. \a";
+  line-height: 2;
   color: #07777c;
   white-space: pre-wrap;
   font-weight: 700;
@@ -96,12 +104,9 @@ body {
   list-style-type: none;
 }
 
-.article h3 {
-  font-size: 1.5rem;
-  font-family: "Scheherazade", serif;
-}
 .article code {
   font-family: "Fira Mono", monospace;
+  line-height: 2;
   font-size: 0.85rem;
   color: #111111;
   background-color: #f7f9f9;
@@ -114,6 +119,7 @@ body {
   background-color: #f7f9f9;
   width: 100%;
   display: block;
+  margin: -1rem;
 }
 
 .article blockquote {

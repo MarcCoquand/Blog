@@ -1,6 +1,6 @@
 ---
 date: 2019-06-15
-title: All the variants of Variants and their practical uses
+title: All the variants of Variants
 author: Marc Coquand
 ---
 

@@ -1,6 +1,6 @@
 ---
 date: 2019-05-05
-title: A refinement-driven approach to building applications
+title: Refinement-driven application development
 author: Marc Coquand
 ---
 

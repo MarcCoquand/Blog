@@ -1,6 +1,6 @@
 ---
 date: 2019-04-26
-title: Personal Reading List for Software Development
+title: Software development reading list
 author: Marc Coquand
 ---
 

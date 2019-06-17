@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <header class="pb2 mh3 mt4-ns mw7 pb5-ns mh5-ns dark-gray">
+    <header class="pb2 mh3 mt4-ns mw7 pb6-ns mh5-ns dark-gray">
       <h3 class="f6 gotham upcase ttu f mid-gray w5 tracked">
         <a href="/" class="link dark-gray hover-moon-gray">Marc Coquand</a>
         <b>/</b> Article
@@ -29,9 +29,11 @@
     </header>
     <article class="article dark-gray pb4 pb6-ns mh3">
       <div class="dashed-list f3 pb3 fw5 mw6 auto ">
-        <h1 class="firamono f3-ns pb4-ns fw7 tc-ns lh-copy">Challenges in Elm</h1>
-        <hr class="mb4-ns" />
-        <p class="fw4 f3 pb0 pt5-ns ">2019-05-03</p>
+        <h1 class="firamono ttu tracked-mega f2 pb4-ns fw7 lh-copy">
+          Challenges in Elm
+        </h1>
+        <hr />
+        <p class="fw4 f3 pb0 pt3-ns ">2019-05-03</p>
         <p>People who know me in real life know that I always rave about Elm and how incredible the language is. But, alas in software engineering there is no such thing as a silver bullet. Elm does have it's drawbacks and I am going to list some of them here which can pose a problem.</p>
 <h3 id="testing-elm-is-actually-not-that-easy">Testing Elm is actually not that easy</h3>
 <p>There are parts of the software that Elm's type system can not guarantee are error free and where regressions can sneak in. For example if our program interacts with a REST api and the endpoints change, the program would stop working. In Elm, there is no way to write any test to check for this. The reason is because Elm is a pure language that does not execute any side effects. Elm has no way of writing integration tests. To write integration tests in Elm there must be a way to execute commands and ensure that right they return the correct response. This is also integral to writing property-based tests for state machines, where we model the side effects with a pure implementation and compare the effectful model to the pure model and ensure they function the same way for any data.</p>

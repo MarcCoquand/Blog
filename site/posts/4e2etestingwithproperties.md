@@ -1,6 +1,6 @@
 ---
 date: 2019-05-02
-title: Rapid E2E-testing with Property-based Integration Tests.
+title: Rapid E2E-testing
 author: Marc Coquand
 ---
 

@@ -198,7 +198,9 @@ let component = (~translate: [< `Greeting] => string) =>
 
 // App.re
 let component = (state) =>
-    Hello.component(~translate=Language.translate(state.languge))
+    Hello
+        .component(~translate=
+        Language.translate(state.languge))
 ```
 
 This still has all the same guarantees as before. `translate` is now instead

@@ -66,7 +66,7 @@ const hypertext = (function() {
   };
 
   function hypertextChar(char) {
-    return probability(0.65) ? "/" : "-";
+    return probability(1) ? "/" : "-";
   }
 
   // -------------------------------------------------------------------

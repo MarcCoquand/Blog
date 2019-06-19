@@ -146,58 +146,33 @@ let component = (state) =&gt;
         .component(~translate=
         Language.translate(state.languge))</code></pre>
 <p>This still has all the same guarantees as before. <code>translate</code> is now instead taken as a function argument and needs to be able to handle <code>[&lt; `Greeting]</code> and return a string. This enables developing components in isolation without having to import the translate function. If the component contains a phrase not in the translate function it causes compile errors. This means that component writers can work in isolation and then wire up the cases afterwards.</p>
+<p>Another example of use cases for polymorphic variants is <a href="composable%20error%20handling">https://keleshev.com/composable-error-handling-in-ocaml</a>.</p>
 <h2 id="generalized-variants">Generalized variants</h2>
-<p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name. To understand generalized variants, phantom types must be understood.</p>
-<h3 id="phantom-types-invisible-types.">Phantom types, invisible types.</h3>
-<p>A phantom type is a type which never shows up on the right hand side.</p>
-<pre><code>type cat(&#39;phantom) = Cat</code></pre>
-<p>In the above code <code>'phantom</code> can be anything. For example <code>let intCat: cat(int) = Cat</code> is a valid construction. This means that the same value can have different types. A type can also have zero constructors, by declaring <code>type hungry</code> and never declaring what it equal. These values can never be constructed, only declared with types. This goes well with phantom type, consider a zombie invasion. A gated community would never want to accept any zombies, only humans that are alive. Of course a zombie is still a human, thus at a value level they might look the same. Luckily for us the type system can enforce this</p>
-<pre><code>type human(&#39;state) = Human
-type zombie
-type alive
-
-let guard = ... /* Protect the human */
-
-let enter = (human: human(alive)) =&gt;
-    guard(human)
-
-// Now if a zombie attempts to enter
-let badGuy: human(zombie) = Human
-
-enter(badGuy) // Error, only alive humans allowed. Compiler saved us.</code></pre>
-<p>So phantom types can be used to encode things to the compiler when the type information is not enough. Another example is encoding</p>
-<pre><code>// Unencoded and encoded values are both strings
-type str(&#39;a) = string
-type unencoded
-type encoded
-
-let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
-<p>With phantom types, it is no longer possible to encode an encoded string, and since the only way to create something of type <code>str(encoded)</code> is through the <code>encode</code> function, the compiler ensures that strings are only encoded once by using <code>encode</code>.</p>
-<h3 id="back-to-generalized-variants">Back to generalized variants</h3>
-<p>A generalized variant is a variant which can return a phantom type. Let's look at an example:</p>
+<p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name.</p>
+<p>A generalized variant is a variant which can specify a hidden return type.</p>
 <pre><code>type boolOrInt(&#39;a) =
     | Bool: boolOrInt(bool)
     | Int: boolOrInt(int)</code></pre>
-<p>Notice that the variant now has a return type of <code>boolOrInt('a)</code>. This value can be extracted:</p>
+<p><code>boolOrInt('a)</code> is a variant with two constructors but with a twist. Notice that the variant has a return type, <code>boolOrInt('a)</code>. The return type can be used to create a function that depending on the variant produces a different type.</p>
 <pre><code>let evaluate = (boolOrInt: boolOrInt(&#39;a)): &#39;a =&gt;
     switch(boolOrInt) {
     | Bool =&gt; true
     | Int =&gt; 5
     }</code></pre>
-<p>However, if you try to compile this you will run into errors. This is because the variable needs to be quantified, which is a topic for another day. For now just change the function.</p>
+<p>If you try to compile this you will run into errors. The variable needs to be quantified, which is a topic for another day. For now just change the function.</p>
 <pre><code>let evaluate: type a. boolOrInt(a) =&gt; a =
     switch(boolOrInt) {
     | Bool =&gt; true
     | Int =&gt; 5
     }</code></pre>
-<p>and it will work! Notice that the return type is the same as the type in the <code>boolOrInt</code> constructor's return type. So if you attempt to declare</p>
+<p>Notice that the return type is the same as the type in the <code>boolOrInt</code> constructor's return type. So if you attempt to declare</p>
 <pre><code>let evaluateWithError: type a. boolOrInt(a) =&gt; a =
     switch(boolOrInt) {
     | Bool =&gt; &quot;I&#39;m a string&quot;
     | Int =&gt; 5
     }</code></pre>
-<p>the compiler will generate an error. The return type of the function <strong>must</strong> be the same as the return type of <code>boolOrInt</code>. <code>evaluateWithError</code> makes the mistake that it attempts to return a string when the <code>boolOrInt</code> declared that for the constructor Bool, the <em>phantom type</em> is a bool as well. The type signature states that <code>boolOrInt(a) =&gt; a</code>, so for the constructor <code>Bool</code>, <code>boolOrInt(bool)</code> and for the constructor <code>Int</code>, <code>boolOrInt(int)</code>. However <code>evaluateWithError</code> tries to do <code>boolOrInt(bool) =&gt; string</code>, which the type signature does not allow.</p>
-<p>With all of this said, the example is not particularly exciting. Let's do something more interesting</p>
+<p>the compiler will generate an error. The return type of the function <strong>must</strong> be the same as the return type of <code>boolOrInt</code>. <code>evaluateWithError</code> makes the mistake that it attempts to return a string when <code>boolOrInt</code> declared that for the constructor Bool, the type is a boolean. The type signature states that <code>boolOrInt(a) =&gt; a</code>, so for the constructor <code>Bool</code>, <code>boolOrInt(bool)</code> and for the constructor <code>Int</code>, <code>boolOrInt(int)</code>. <code>evaluateWithError</code> has a case with <code>boolOrInt(bool) =&gt; string</code>, which the compiler complains about.</p>
+<p><code>boolOrInt</code> is not particularly exciting. Let's do something more interesting.</p>
 <h3 id="use-case-inversion-of-control">Use case: Inversion of control</h3>
 <p>When creating large scale software it can be dangerous to rely on one dependency. For example if the software developed relies on Firebase and the requirements change so now it has to rely on Postgres then all code needs to be rewritten. Inversion of control mitigates this by hiding dependency details. This is normally done with interfaces. So for example</p>
 <pre><code>type operations =
@@ -238,7 +213,7 @@ let rec evaluate = type a. operations(a) =&gt; a = ops =&gt;
           // op1 returns a unit so we don&#39;t care about that
           evaluate(op2);
          }</code></pre>
-<p>Notice that evaluate is now recursive. If two operations are sequenced we want to run evaluate on each one of them. So now we can describe our effects more easily:</p>
+<p>Notice that evaluate is now recursive. If two operations are sequenced we want to run evaluate on each one of them. Now we can describe our effects with functions so that after each effect the todolist gets updated as well.</p>
 <pre><code>// Effect.re
 let getAll = GetAll
 let delete = id =&gt; Sequence(Delete(id), getAll)
@@ -252,7 +227,7 @@ let evaluate = type a. operations(a) =&gt; a = ops =&gt;
         evaluate(op1)
         evaluate(op2)
         }</code></pre>
-<p>This approach has several advantages over the standard dependency injection approach for testing and maintenance, which will be explored in other articles.</p>
+<p>This approach has advantages over the standard dependency injection approach for testing and maintenance, which will be explored in other articles.</p>
         <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
           >‹ View more posts</a
         >

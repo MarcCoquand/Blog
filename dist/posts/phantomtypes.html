@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Introduction to Phantom types</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
+        <a href="/" class="link dark-gray b hover-moon-gray">Marc Coquand</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="dashed-list f3 pb3 fw5 mw6-ns auto ">
+        <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">Introduction to Phantom types</h1>
+        <hr />
+        <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
+          2019-06-19
+        </p>
+        <p>A phantom type is a type which never shows up on the right hand side.</p>
+<pre><code>type cat(&#39;phantom) = Cat</code></pre>
+<p>In the above code <code>'phantom</code> can be anything. For example <code>let intCat: cat(int) = Cat</code> is a valid construction. This means that the same value can have different types. A type can also have zero constructors, by declaring <code>type hungry</code> and never declaring what it equal. These values can never be constructed, only declared with types. This goes well with phantom type. For example, consider a zombie invasion. A gated community would never want to accept any zombies, only humans that are alive. The gated community can be entered using an enter function which takes a human as an argument. Of course a zombie is still a human, thus at a value level they might look the same. Phantom types allows adding additional information at the type level which can create a &quot;safe&quot; enter function where no zombies are allowed.</p>
+<pre><code>type human(&#39;state) = Human
+type zombie
+type alive
+
+let guard = ... /* Protect the human */
+
+let enter = (human: human(alive)) =&gt;
+    guard(human)
+
+// Now if a zombie attempts to enter
+let badGuy: human(zombie) = Human
+
+enter(badGuy) // Error, only alive humans allowed. Compiler saved us.</code></pre>
+<p>So phantom types can be used to encode things to the compiler when the type information is not enough. This can be useful for separating encoded and unencoded strings in Reasonml.</p>
+<pre><code>// Unencoded and encoded values are both strings
+type str(&#39;a) = string
+type unencoded
+type encoded
+
+let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
+<p>With phantom types, it is no longer possible to encode an encoded string, and since the only way to create something of type <code>str(encoded)</code> is through the <code>encode</code> function, the compiler ensures that strings are only encoded once by using <code>encode</code>.</p>
+        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
+          >‹ View more posts</a
+        >
+      </div>
+    </article>
+  </body>
+</html>

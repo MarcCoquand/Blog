@@ -210,66 +210,17 @@ having to import the translate function. If the component contains a phrase not
 in the translate function it causes compile errors. This means that component
 writers can work in isolation and then wire up the cases afterwards.
 
+Another example of use cases for polymorphic variants is
+[https://keleshev.com/composable-error-handling-in-ocaml](composable error
+handling).
+
 ## Generalized variants
 
 Last in the variants of variants is the generalized variant, also known as
 generalized algebraic data type, GADT, first-class phantom type, guarded
 recursive datatype, or equality-qualified type. Lots of variants on that name.
-To understand generalized variants, phantom types must be understood.
 
-### Phantom types, invisible types.
-
-A phantom type is a type which never shows up on the right hand side.
-
-```
-type cat('phantom) = Cat
-```
-
-In the above code `'phantom` can be anything. For example `let intCat: cat(int) = Cat` is a valid construction. This means that the same value can have
-different types. A type can also have zero constructors, by declaring `type hungry` and never declaring what it equal. These values can never be
-constructed, only declared with types. This goes well with phantom type,
-consider a zombie invasion. A gated community would never want to accept any
-zombies, only humans that are alive. Of course a zombie is still a human, thus
-at a value level they might look the same. Luckily for us the type system can
-enforce this
-
-```
-type human('state) = Human
-type zombie
-type alive
-
-let guard = ... /* Protect the human */
-
-let enter = (human: human(alive)) =>
-    guard(human)
-
-// Now if a zombie attempts to enter
-let badGuy: human(zombie) = Human
-
-enter(badGuy) // Error, only alive humans allowed. Compiler saved us.
-```
-
-So phantom types can be used to encode things to the compiler when the type
-information is not enough. Another example is encoding
-
-```
-// Unencoded and encoded values are both strings
-type str('a) = string
-type unencoded
-type encoded
-
-let encode(str: str(unencoded): str(encoded) => ...
-```
-
-With phantom types, it is no longer possible to encode an encoded string, and
-since the only way to create something of type `str(encoded)` is through the
-`encode` function, the compiler ensures that strings are only encoded once by
-using `encode`.
-
-### Back to generalized variants
-
-A generalized variant is a variant which can return a phantom type. Let's look
-at an example:
+A generalized variant is a variant which can specify a hidden return type.
 
 ```
 type boolOrInt('a) =
@@ -277,8 +228,9 @@ type boolOrInt('a) =
     | Int: boolOrInt(int)
 ```
 
-Notice that the variant now has a return type of `boolOrInt('a)`. This value can
-be extracted:
+`boolOrInt('a)` is a variant with two constructors but with a twist. Notice that
+the variant has a return type, `boolOrInt('a)`. The return type can be used to
+create a function that depending on the variant produces a different type.
 
 ```
 let evaluate = (boolOrInt: boolOrInt('a)): 'a =>
@@ -288,9 +240,8 @@ let evaluate = (boolOrInt: boolOrInt('a)): 'a =>
     }
 ```
 
-However, if you try to compile this you will run into errors. This is because
-the variable needs to be quantified, which is a topic for another day.
-For now just change the function.
+If you try to compile this you will run into errors. The variable needs to be
+quantified, which is a topic for another day. For now just change the function.
 
 ```
 let evaluate: type a. boolOrInt(a) => a =
@@ -300,8 +251,8 @@ let evaluate: type a. boolOrInt(a) => a =
     }
 ```
 
-and it will work! Notice that the return type is the same as the type in the
-`boolOrInt` constructor's return type. So if you attempt to declare
+Notice that the return type is the same as the type in the `boolOrInt`
+constructor's return type. So if you attempt to declare
 
 ```
 let evaluateWithError: type a. boolOrInt(a) => a =
@@ -313,15 +264,13 @@ let evaluateWithError: type a. boolOrInt(a) => a =
 
 the compiler will generate an error. The return type of the function **must** be
 the same as the return type of `boolOrInt`. `evaluateWithError` makes the
-mistake that it attempts to return a string when the `boolOrInt` declared that
-for the constructor Bool, the _phantom type_ is a bool as well. The type
-signature states that `boolOrInt(a) => a`, so for the constructor `Bool`,
-`boolOrInt(bool)` and for the constructor `Int`, `boolOrInt(int)`. However
-`evaluateWithError` tries to do `boolOrInt(bool) => string`, which the type
-signature does not allow.
+mistake that it attempts to return a string when `boolOrInt` declared that for
+the constructor Bool, the type is a boolean. The type signature states that
+`boolOrInt(a) => a`, so for the constructor `Bool`, `boolOrInt(bool)` and for
+the constructor `Int`, `boolOrInt(int)`. `evaluateWithError` has a case with
+`boolOrInt(bool) => string`, which the compiler complains about.
 
-With all of this said, the example is not particularly exciting. Let's do
-something more interesting
+`boolOrInt` is not particularly exciting. Let's do something more interesting.
 
 ### Use case: Inversion of control
 
@@ -388,7 +337,8 @@ let rec evaluate = type a. operations(a) => a = ops =>
 ```
 
 Notice that evaluate is now recursive. If two operations are sequenced we want
-to run evaluate on each one of them. So now we can describe our effects more easily:
+to run evaluate on each one of them. Now we can describe our effects with
+functions so that after each effect the todolist gets updated as well.
 
 ```
 // Effect.re
@@ -406,5 +356,5 @@ let evaluate = type a. operations(a) => a = ops =>
         }
 ```
 
-This approach has several advantages over the standard dependency injection
-approach for testing and maintenance, which will be explored in other articles.
+This approach has advantages over the standard dependency injection approach for
+testing and maintenance, which will be explored in other articles.

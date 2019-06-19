@@ -146,7 +146,6 @@ let component = (state) =&gt;
         .component(~translate=
         Language.translate(state.languge))</code></pre>
 <p>This still has all the same guarantees as before. <code>translate</code> is now instead taken as a function argument and needs to be able to handle <code>[&lt; `Greeting]</code> and return a string. This enables developing components in isolation without having to import the translate function. If the component contains a phrase not in the translate function it causes compile errors. This means that component writers can work in isolation and then wire up the cases afterwards.</p>
-<p>Another example of use cases for polymorphic variants is <a href="composable%20error%20handling">https://keleshev.com/composable-error-handling-in-ocaml</a>.</p>
 <h2 id="generalized-variants">Generalized variants</h2>
 <p>Last in the variants of variants is the generalized variant, also known as generalized algebraic data type, GADT, first-class phantom type, guarded recursive datatype, or equality-qualified type. Lots of variants on that name.</p>
 <p>A generalized variant is a variant which can specify a hidden return type.</p>

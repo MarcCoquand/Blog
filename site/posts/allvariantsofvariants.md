@@ -210,10 +210,6 @@ having to import the translate function. If the component contains a phrase not
 in the translate function it causes compile errors. This means that component
 writers can work in isolation and then wire up the cases afterwards.
 
-Another example of use cases for polymorphic variants is
-[https://keleshev.com/composable-error-handling-in-ocaml](composable error
-handling).
-
 ## Generalized variants
 
 Last in the variants of variants is the generalized variant, also known as

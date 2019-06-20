@@ -42,7 +42,7 @@ do not bother. I find this to be a big red flag however.
 
 If you look at a lot of published elm sites you will find that a lot of them use
 almost no animations. Looking at websites such as
-[www.noredink.com](www.noredink.com) and [www.elm-lang.org](www.elm-lang.org),
+[www.noredink.com](https://www.noredink.com) and [www.elm-lang.org](https://www.elm-lang.org),
 all the interactive parts had no transitions or animations. It turns out that
 animating in Elm is a tedious endeavour. For each transition in the animation it
 must be sent to the global update function and our global model must also keep

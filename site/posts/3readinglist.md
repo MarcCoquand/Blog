@@ -42,6 +42,8 @@ list represent that.
   F# code in less than one year by (at most) 3 people. 3000 null checks in the C#
   project and 15 in the F# one."
 - [Functional Architecture](https://www.youtube.com/watch?v=US8QG9I1XW0)
+- [Psychology of Code
+  Readability](https://medium.com/@egonelbre/psychology-of-code-readability-d23b1ff1258a)
 
 ### Bite-sized tips and tricks
 
@@ -58,6 +60,8 @@ list represent that.
   Twice](https://skillsmatter.com/skillscasts/12299-wire-once-rewire-twice)
 - [Falsehoods Programmers Believe About
   Names](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)
+- [Code Quality and
+  Readability](http://firstclassthoughts.co.uk/Tags/Code_Readability.html)
 
 ### Papers
 

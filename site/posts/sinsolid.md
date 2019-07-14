@@ -24,7 +24,7 @@ have responsibility over a single part of the functionality provided by the
 software. This roughly translates to that each class should do one thing. _"Do
 one thing well"_ and Unix principle are other names for this.
 
-## File structure should be flat and formed around types
+### File structure should be flat and formed around types
 
 In Functional programming, software is a composition of functions, that take
 some input and spit out some output. So the principle states that we should keep

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>SOLID, Single Responsibility Principle</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
+        <a href="/" class="link dark-gray b hover-moon-gray">Marc Coquand</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="dashed-list f3 pb3 fw5 mw6-ns auto ">
+        <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">SOLID, Single Responsibility Principle</h1>
+        <hr />
+        <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
+          2019-07-14
+        </p>
+        <p>Robert C. Martin introduced these five design principles called SOLID to create maintainable software. These principles were introduced for Object Oriented programming but they turn out to be useful for functional programming as well. In fact, in functional programming applying these principles can turn out to be even more powerful. The five principles are:</p>
+<ul>
+<li>S — Single Responsibility Principle</li>
+<li>O - Open/closed Principle</li>
+<li>L — Liskov substitution Principle</li>
+<li>I - Interface Segregation Principle</li>
+<li>D - Dependency Inversion Principle</li>
+</ul>
+<p>This will be a five part series where I translate each of the concepts to functional programming, starting with S for Single Responsibility Principle.</p>
+<p>Single Responsibility Principle (SRP) states that every module or class should have responsibility over a single part of the functionality provided by the software. This roughly translates to that each class should do one thing. <em>&quot;Do one thing well&quot;</em> and Unix principle are other names for this.</p>
+<h2 id="file-structure-should-be-flat-and-formed-around-types">File structure should be flat and formed around types</h2>
+<p>In Functional programming, software is a composition of functions, that take some input and spit out some output. So the principle states that we should keep our functions small and reusable.</p>
+<p>Single Responsibility Principle also addresses file structure concerns. In Object-oriented programming, each file has one class. Notice that it says every <em>module</em> should have responsibility over a single part of functionality. In functional programming you have two constructs, data and functions on that data. So it follows that every module should have responsibility of a data type and the functions on that data.</p>
+<p>Ever wondered how you should structure your files and folders? It turns out that the answer is to not have structure at all and keep file structure flat. Dependencies form a graph but a file system forms a tree! This means that whatever structure you try to adopt, unless your dependencies are actually a tree, will never work.</p>
+<p>Instead, what you should do is simple. Have a type and the functions that take that type as an argument. So a file <code>User</code> should contain one type t, probably a record, and then the operations on that user. This can be encoding/decoding, calculating location and posting that user to a database.</p>
+<p>In summary, Single Responsibility Principle states that every part should do one thing. In functional programming this means having a module structure around types and to break down functions into small parts. This leads to less messy code and to functions that are naturally easy to test.</p>
+        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
+          >‹ View more posts</a
+        >
+      </div>
+    </article>
+  </body>
+</html>

@@ -44,6 +44,7 @@ list represent that.
 - [Functional Architecture](https://www.youtube.com/watch?v=US8QG9I1XW0)
 - [Psychology of Code
   Readability](https://medium.com/@egonelbre/psychology-of-code-readability-d23b1ff1258a)
+- [Beating the Average](http://www.paulgraham.com/avg.html)
 
 ### Bite-sized tips and tricks
 
@@ -70,6 +71,7 @@ list represent that.
 - Robert C. Martin - Design Principles and Design Patterns
 - Zhanyong Wan & Paul Hudak - Functional Reactive Programming from First
   Principles
+- Ben Moseley & Peter Marks - Out of the Tar Pit
 
 ### UX, project management and Front-end
 

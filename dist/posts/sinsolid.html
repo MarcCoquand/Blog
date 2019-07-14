@@ -40,7 +40,7 @@
 </ul>
 <p>This will be a five part series where I translate each of the concepts to functional programming, starting with S for Single Responsibility Principle.</p>
 <p>Single Responsibility Principle (SRP) states that every module or class should have responsibility over a single part of the functionality provided by the software. This roughly translates to that each class should do one thing. <em>&quot;Do one thing well&quot;</em> and Unix principle are other names for this.</p>
-<h2 id="file-structure-should-be-flat-and-formed-around-types">File structure should be flat and formed around types</h2>
+<h3 id="file-structure-should-be-flat-and-formed-around-types">File structure should be flat and formed around types</h3>
 <p>In Functional programming, software is a composition of functions, that take some input and spit out some output. So the principle states that we should keep our functions small and reusable.</p>
 <p>Single Responsibility Principle also addresses file structure concerns. In Object-oriented programming, each file has one class. Notice that it says every <em>module</em> should have responsibility over a single part of functionality. In functional programming you have two constructs, data and functions on that data. So it follows that every module should have responsibility of a data type and the functions on that data.</p>
 <p>Ever wondered how you should structure your files and folders? It turns out that the answer is to not have structure at all and keep file structure flat. Dependencies form a graph but a file system forms a tree! This means that whatever structure you try to adopt, unless your dependencies are actually a tree, will never work.</p>

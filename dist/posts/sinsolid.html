@@ -46,6 +46,7 @@
 <p>Ever wondered how you should structure your files and folders? It turns out that the answer is to not have structure at all and keep file structure flat. Dependencies form a graph but a file system forms a tree! This means that whatever structure you try to adopt, unless your dependencies are actually a tree, will never work.</p>
 <p>Instead, what you should do is simple. Have a type and the functions that take that type as an argument. So a file <code>User</code> should contain one type t, probably a record, and then the operations on that user. This can be encoding/decoding, calculating location and posting that user to a database.</p>
 <p>In summary, Single Responsibility Principle states that every part should do one thing. In functional programming this means having a module structure around types and to break down functions into small parts. This leads to less messy code and to functions that are naturally easy to test.</p>
+<h3 id="lazy-evaluation-helps-writing-code-that-is-ssp">Lazy evaluation helps writing code that is SSP</h3>
         <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
           >‹ View more posts</a
         >

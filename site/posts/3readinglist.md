@@ -66,6 +66,7 @@ list represent that.
 
 ### Papers
 
+- Edsger W. Dijkstra - The Humble Programmer
 - John Hughes - Why Functional Programming Matters
 - John Hughes - Testing the Hard Stuff and Staying Sane
 - Robert C. Martin - Design Principles and Design Patterns
@@ -89,3 +90,5 @@ preferable to email and offices?
 - J.D. Meier - Getting Results the Agile Way: A Personal Results System for Work and Life
 - David Allen - Getting Things Done
 - Cal Newport - Deep Work
+
+_last updated 03-11-2019_

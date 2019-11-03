@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>SOLID, Open/Closed Principle</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
+        <a href="/" class="link dark-gray b hover-moon-gray">Marc Coquand</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="dashed-list f3 pb3 fw5 mw6-ns auto ">
+        <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">SOLID, Open/Closed Principle</h1>
+        <hr />
+        <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
+          2019-07-15
+        </p>
+        <p>This is second part of a series about functional programming and SOLID principles. This post will touch the O in SOLID, Open/Closed principle.</p>
+<p>Open/Closed principle states that software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.</p>
+<p>The OCP is an advice on how to write modules in such a way that we have backwards compatibility and so that if extra functionality is needed, the modifier does not need to look at the class in order to make modifications. So if a class has some new requirements you do not need to modify the source code but can instead extend the superclass.</p>
+<p>When we apply this principle into Functional programming, we run into a well known problem called the <em>expression problem</em>. The expression problem used to be one of the strongest arguments against the use of functional programming! It states</p>
+<p><q>The goal is to define a datatype by cases, where one can add new cases to the datatype and new functions over the datatype, without recompiling existing code, and while retaining static type safety (e.g., no casts).</q></p>
+<p>You can notice the similarity. Object-oriented programming uses classes that should be open for extension and closed for modification. In functional programming, when this principle is applied, new cases to datatype should be possible and new functions.</p>
+<p>OCP exists because modifying battle tested code is dangerous and might cause regressions. Thus a preferable solution is to extend the previous code instead.</p>
+<h3 id="creating-a-ocp-compliant-paint-programming">Creating a OCP compliant paint programming</h3>
+<p>In a paint program, various shapes should be possible to paint: circles, squares, stars and custom shapes. It should also have a custom menu depending on the shape, a circle should be able to set the radius, a square the area and stars the diameter.</p>
+<p>A classic functional approach is to create a sum type (variant) of the various shape</p>
+<pre><code>type Shape =
+      Star size
+    | Custom [vector]
+    | Circle radius curvature
+    | Square size</code></pre>
+<p>Afterwards, one might create a function</p>
+<pre><code>render : Shape -&gt; IO ()
+render shape =
+    case shape of
+    | Star(size) =&gt; Star.render(size)
+    ...
+
+-- Do the same thing
+renderMenu : Shape -&gt; IO ()
+renderMenu = ...</code></pre>
+<p>If we wish to add one more shape, we would have to modify the original code! This means that Open/Closed principle is not being followed. It can cause a lot of trouble down the line, one function is acceptable but what if we had thousands of functions that depended on shape. Adding one shape would mean changing thousands of lines of code scattered all over the place!</p>
+<h3 id="type-classes-and-contravariance">Type classes and Contravariance</h3>
+<p>In order to render shapes, there needs some general format which we can use to render them. Let's assume we have some function <code>render : Set Vector -&gt; IO ()</code> for rendering. This is great because we know that any shape can be represented as a set of vectors in the end. Let us define <code>newtype Renderable a = Renderable (a -&gt; Set Vector)</code>. Now it becomes possible to define a render function <code>render : Renderable a -&gt; a -&gt; IO ()</code>, that works for all shapes.</p>
+<p>Renderable can not be instanced as Functor and just having a function <code>a -&gt; Set Vector</code> is not extendable. With Functors, informally we append an extra arrow at the <em>end</em> of the function. So if we have a <code>Maybe a</code> and want to turn it into <code>Maybe b</code>, we append an arrow at the end so that <code>a -&gt; b</code>. With fmap we can keep transforming so <code>a -&gt; b -&gt; c -&gt;....</code> but we can not add anything before <code>a</code>.</p>
+<p>Now the opposite is true for a Contravariant functor. A Contravariant Functor can only prepend arrows. So if we have <code>a</code>, it can be turned into <code>b -&gt; a</code>, <code>c -&gt; b -&gt; a</code>. Nothing can be added after a however. This operation is called contramap, and has the signature:</p>
+<pre><code>contramap : Contravariant c =&gt; (a -&gt; b) -&gt; c b -&gt; c a</code></pre>
+<p>Turns out that while Renderable is not a Functor, it is a contravariant Functor:</p>
+<pre><code>instance Contravariant a =&gt; Renderable a where
+    contramap cf b = \a -&gt; b $ cf a
+</code></pre>
+<p>Shapes can be made in separation now by contramapping properties. So now we can implement shapes in separation, for example a circle:</p>
+<pre><code>type Circle = {radius: Int}
+circle : Renderable Circle
+circle = circleToVector . radius -- circleToVector does mathy stuff
+
+setRadiusFactor :  Int -&gt; Renderable Circle -&gt; Renderable Circle
+setRadiusFactor factor = contramap ({radius = factor})</code></pre>
+<p>The circle is rather trivial and does not seem to require much modification. What about Custom shapes? Well they too become trivial with contravariance:</p>
+<pre><code>type Custom = {scale : Int, shape : Set Vector}
+custom : Renderable Custom
+custom = scale × shape
+
+addVertex : Vector -&gt; Renderable Custom -&gt; Renderable Custom
+addVertex vertex = contramap (Set.union vertex)</code></pre>
+<p>Contravariance forces adherence to a certain interface but leaves it open to modification, in spirit to the Open/Closed Principle. A separate part of the code can contain <code>Renderable Square</code>, <code>Renderable Star</code> without modifying the original code. Thus, in Functional programming, contravariance and type classes can enable OCP compliant code.</p>
+<p>Note here that OCP compliant code might not be that big of a problem. The first example with using a sum type might actually be a simpler solution that is more accessible for beginners. With modern static type checkers, if you make a change in one place it will report errors everywhere so the developer just has to follow the type and fix all the errors when making changes.</p>
+        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
+          >‹ View more posts</a
+        >
+      </div>
+    </article>
+  </body>
+</html>

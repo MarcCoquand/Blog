@@ -52,3 +52,5 @@ In summary, Single Responsibility Principle states that every part should do one
 thing. In functional programming this means having a module structure around
 types and to break down functions into small parts. This leads to less messy
 code and to functions that are naturally easy to test.
+
+### Lazy evaluation helps writing code that is SSP

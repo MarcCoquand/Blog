@@ -77,6 +77,25 @@ body {
   font-size: 1rem;
 }
 
+.article table th {
+  font-weight: 700;
+  font-family: "Fira Mono", serif;
+  text-transform: uppercase;
+  text-align: left;
+  font-size: 0.9rem;
+  border-bottom: 1px solid black;
+  border-collapse: collapse;
+}
+
+.article table td {
+  font-family: "Gotham Book" !important;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  border-bottom: 1px solid lightgray;
+  min-width: 5rem;
+  border-collapse: collapse;
+}
+
 .article pre code:before {
   content: "λ. \a";
   line-height: 2;

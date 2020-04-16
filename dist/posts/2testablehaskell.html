@@ -19,14 +19,13 @@
   <body>
     <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
       <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
-        <a href="/" class="link dark-gray b hover-moon-gray">Marc Coquand</a>
+        <a href="/" class="link dark-gray b hover-moon-gray">The Predicate</a>
         <b>/</b> Article
       </h3>
     </header>
     <article class="article dark-gray pb4 pb6-ns mh3">
-      <div class="dashed-list f3 pb3 fw5 mw6-ns auto ">
+      <div class="dashed-list f3 pb3 fw5 mw7-ns auto ">
         <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">Haskell is Not that Easy to Test</h1>
-        <hr />
         <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
           2019-02-24
         </p>
@@ -68,9 +67,27 @@ token user =
         let maybeToken = encode $ Token user expirationDate
         return maybeToken</code></pre>
 <p>With this definition, unit tests becomes trivial. Now there are other posts that explains writing better Haskell code <a href="https://www.parsonsmatt.org/2018/03/22/three_layer_haskell_cake.html">here</a>. My point with this post is to clarify that testing is still not free in Haskell, it requires rigor and research and the uninitiated can write untestable code. It is also to clarify that regardless if Haskell is pure or not we still do not get the benefits of purity everywhere in our code. In fact we could write our Haskell code in one massive main function and use <code>return</code> on pure functions and we would have gained no benefits whatsoever from normal code. This means that we still need to introduce some discipline and rigor to our coworkers that are not familiar with Haskell. The new solution, while testable, is a lot more complex and requires understanding more advanced Haskell concepts like MTL.</p>
-        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
-          >‹ View more posts</a
-        >
+        <hr />
+        <p>
+           Author: Marc Coquand
+        </p>
+        <p class="f5 fw5">
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://www.linkedin.com/in/marc-coquand-7449b3123/"
+            >Linkedin</a
+          > |
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://github.com/MarcCoquand"
+            >Github</a
+          >
+        </p>
+        <p class="f5 fw5">
+        <a href="/"
+           class="link skobeloff hover-moon-gray b fw5 f5"
+           >‹ View more posts</a>
+        </p>
       </div>
     </article>
   </body>

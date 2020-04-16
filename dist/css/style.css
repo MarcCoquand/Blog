@@ -29,11 +29,11 @@ body {
 
 .article p {
   line-height: 2;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
 }
 .article li {
   line-height: 2;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
 }
 .article hr {
   height: 0.1rem;
@@ -99,7 +99,6 @@ body {
 .article pre code:before {
   content: "λ. \a";
   line-height: 2;
-  color: #07777c;
   white-space: pre-wrap;
   font-weight: 700;
   font-size: 0.9rem;
@@ -126,21 +125,22 @@ body {
   font-family: "Fira Mono", monospace;
   line-height: 2;
   font-size: 0.85rem;
-  color: #111111;
-  background-color: #f7f9f9;
+  color: #fff;
+  border-radius: 3px;
+  background-color: #29292e;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 
 .article pre code {
   white-space: pre-wrap;
   padding: 1rem;
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-  color: #111111;
-  background-color: #f7f9f9;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
   width: 100%;
   display: block;
-  margin-top: -0.5rem;
-  margin-bottom: -0.5rem;
+  margin-top: -0.7rem;
+  margin-bottom: -0.7rem;
 }
 
 .article blockquote {

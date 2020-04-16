@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Alleviating boilerplate in Typescript</title>
+    <meta name="Description" content="Author: Marc Coquand" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
+      <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
+        <a href="/" class="link dark-gray b hover-moon-gray">The Predicate</a>
+        <b>/</b> Article
+      </h3>
+    </header>
+    <article class="article dark-gray pb4 pb6-ns mh3">
+      <div class="dashed-list f3 pb3 fw5 mw7-ns auto ">
+        <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">Alleviating boilerplate in Typescript</h1>
+        <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
+          2020-01-11
+        </p>
+        <p>One issue with static typing is dealing with data that have <em>similar</em> types but not the <em>same</em> type, which is something we do all the time when we build web services. The naive approach is to have the same model for business domain, outgoing data and the database. But different models have different properties and needs.</p>
+<ul>
+<li>In the database, data should be relational. That means that sets and arrays should be converted to their own tables.</li>
+<li>Our responses should contain JSON, where data should be nested. IDs should be replaced with the actual data.</li>
+<li>To reduce bugs, business logic should have the lowest cardinality possible that matches the problem. So in business logic, some data are best represented as a <em>Set</em> to reduce cardinality rather than an Array. However, when we serialize the data such logic might disappear as the logic then gets morphed into primitive types.</li>
+</ul>
+<p>Thus, three representations of the same data is needed and there also need to be morphisms between them. So in a web app it could be <code>Sql &lt;-&gt; Business &lt;-&gt; JSON</code>. Lastly, the data coming from the server might be badly formatted so it needs to be validated as well. Also, sql data may or may not have IDs and created dates so that needs to be taken into account.</p>
+<h2 id="intersection-types">Intersection Types</h2>
+<p>One of my favorite feature in Typescript is intersection types. It allows you to connect two types into one.</p>
+<pre><code>type Book = {
+    title: string
+    author: string
+}
+
+type User = {
+    name: string
+    lastName: string
+}
+
+type BookAndUser = {user: User} &amp; {book: Book}
+   //= {name: string, lastName: string, title: string, author: string}</code></pre>
+<p>We can use intersection types to write a <code>WithId</code> type:</p>
+<pre><code>type WithId&lt;T&gt; = T &amp; {readonly id: Id}</code></pre>
+<p>This is useful for SQL queries,</p>
+<pre><code>type Inserted&lt;T&gt; = T &amp; {readonly id: Id, createdAt: Date} 
+type SqlUser = {
+    ...
+}
+
+type ExistingSqlUser = Inserted&lt;SqlUser&gt;
+
+const insert = (user: SqlUser): Promise&lt;Id&gt; =&gt; //...
+
+const get = (id: Id): Promise&lt;ExistingSqlUser&gt; =&gt; //...</code></pre>
+<p>The only time a <code>SqlUser</code> would not have an ID is if the user is not inserted yet however without intersection types <code>id</code> would be optional and we would have to check in every function that <code>id</code> actually exists.</p>
+        <hr />
+        <p>
+           Author: Marc Coquand
+        </p>
+        <p class="f5 fw5">
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://www.linkedin.com/in/marc-coquand-7449b3123/"
+            >Linkedin</a
+          > |
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://github.com/MarcCoquand"
+            >Github</a
+          >
+        </p>
+        <p class="f5 fw5">
+        <a href="/"
+           class="link skobeloff hover-moon-gray b fw5 f5"
+           >‹ View more posts</a>
+        </p>
+      </div>
+    </article>
+  </body>
+</html>

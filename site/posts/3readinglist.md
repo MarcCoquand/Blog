@@ -24,6 +24,8 @@ list represent that.
   Programmers](https://github.com/hmemcpy/milewski-ctfp-pdf)
 - Ben-Ari Mordechai - Mathematical logic for computer science
 - Fredrick Brooks - The Mythical Man Month
+- Brendan Fong & David I. Spivak - [Seven Sketches in
+  Compositionality](http://math.mit.edu/~dspivak/teaching/sp18/7Sketches.pdf)
 
 ### Blogs
 

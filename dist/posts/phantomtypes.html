@@ -19,14 +19,13 @@
   <body>
     <header class="pb2 mh3 mt4-ns mw7-ns  pb5-ns mh5-ns dark-gray">
       <h3 class="f6 gotham upcase ttu f mid-gray w5 fw3 tracked">
-        <a href="/" class="link dark-gray b hover-moon-gray">Marc Coquand</a>
+        <a href="/" class="link dark-gray b hover-moon-gray">The Predicate</a>
         <b>/</b> Article
       </h3>
     </header>
     <article class="article dark-gray pb4 pb6-ns mh3">
-      <div class="dashed-list f3 pb3 fw5 mw6-ns auto ">
+      <div class="dashed-list f3 pb3 fw5 mw7-ns auto ">
         <h1 class="firamono ttu tracked-mega f2 fw7 lh-copy">Introduction to Phantom types</h1>
-        <hr />
         <p class="fw7 f3 pb0 pt3-ns pb3-ns firamono mid-gray tracked-mega">
           2019-06-19
         </p>
@@ -54,9 +53,27 @@ type encoded
 
 let encode(str: str(unencoded): str(encoded) =&gt; ...</code></pre>
 <p>With phantom types, it is no longer possible to encode an encoded string, and since the only way to create something of type <code>str(encoded)</code> is through the <code>encode</code> function, the compiler ensures that strings are only encoded once by using <code>encode</code>.</p>
-        <a href="/" class="f3 article-size link skobeloff hover-moon-gray fw4"
-          >‹ View more posts</a
-        >
+        <hr />
+        <p>
+           Author: Marc Coquand
+        </p>
+        <p class="f5 fw5">
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://www.linkedin.com/in/marc-coquand-7449b3123/"
+            >Linkedin</a
+          > |
+          <a
+            class="link skobeloff hover-moon-gray b fw5 f5"
+            href="https://github.com/MarcCoquand"
+            >Github</a
+          >
+        </p>
+        <p class="f5 fw5">
+        <a href="/"
+           class="link skobeloff hover-moon-gray b fw5 f5"
+           >‹ View more posts</a>
+        </p>
       </div>
     </article>
   </body>

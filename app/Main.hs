@@ -9,9 +9,9 @@ import           GHC.Generics
 import           SitePipe
 
 indexContext :: [Value] -> Value
-indexContext posts =
+indexContext articles =
     object
-        [ "posts" .= posts
+        [ "articles" .= articles
         , "url" .= ("/index.html" :: String)
         ]
 
@@ -49,11 +49,11 @@ sortPosts =
 main :: IO ()
 main =
     site $
-        do  unsortedPosts <- resourceLoader markdownReader ["posts/*.md"]
+        do  unsortedPosts <- resourceLoader markdownReader ["articles/*.md"]
 
-            let posts =
+            let articles =
                     sortPosts unsortedPosts
 
             staticAssets
-            writeTemplate "templates/index.html" [indexContext posts]
-            writeTemplate "templates/post.html" posts
+            writeTemplate "templates/index.html" [indexContext articles]
+            writeTemplate "templates/article.html" articles
